@@ -1,7 +1,10 @@
-from . import db
+from flask import g
+from flask_sqlalchemy import SQLAlchemy
 
 from werkzeug.security import generate_password_hash
 import enum
+
+db = SQLAlchemy()
 
 class User(db.Model):
     def __init__(self, username, password, email, admin):

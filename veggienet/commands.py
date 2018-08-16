@@ -1,11 +1,11 @@
-from . import db, app
+from .wsgi import app
 from getpass import getpass
-from .models import User
+from .models import User, get_db
 
 @app.cli.command('initdb')
 def initdb():
     """Initializes the database."""
-    db.create_all()
+    get_db().create_all()
     print('Initialized the database.')
 
 @app.cli.command('createuser')
@@ -20,6 +20,8 @@ def createuser():
     else:
         admin = False
 
-    user = User(username, email, password, admin)
+    user = User(username, password, email, admin)
+
+    db = get_db()
     db.session.add(user)
     db.session.commit()

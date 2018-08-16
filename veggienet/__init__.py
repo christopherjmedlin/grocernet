@@ -1,9 +1,16 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from .api.users import users_bp
+from .models import db
 
-app = Flask(__name__)
-app.config.from_pyfile('../instance/config.py')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+def create_app(config_path='../instance/config.py', testing=False):
+    app = Flask(__name__)
+    app.config.from_pyfile('../instance/config.py')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-from . import api, commands, models
+    app.register_blueprint(users_bp)
+
+    if testing:
+        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_DATABASE_URI']
+
+    db.init_app(app)
+    return app
