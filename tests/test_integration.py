@@ -35,8 +35,10 @@ def test_valid_user_put(client, db):
     with app.app_context():
         models.save_to_database(user)
         response = client.put('/users/' + str(user.id),
-                data="{'user': 'user23413', 'email': 'user234134@gmail.com'}")
+                data={"username": "user23413", "email": "user234134@gmail.com"})
+        user = models.User.query.filter_by(id=user.id).first()
 
+    assert user.username == 'user23413'
         
 
                        

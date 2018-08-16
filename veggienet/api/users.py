@@ -3,6 +3,7 @@ from veggienet.models import User, save_to_database, db
 
 from flask import session, g, request, current_app, Blueprint
 from flask_restful import Resource, Api, abort, reqparse
+from copy import deepcopy
 
 import jwt
 from werkzeug.security import check_password_hash
@@ -39,10 +40,12 @@ def username(username):
         raise ValueError("Invalid username: cannot contain whitespace")
     return username
  
-user_parser = RequestParser()
-user_parser.add_argument("username", type=str, required=True)
-user_parser.add_argument("password", type=password, required=True)
-user_parser.add_argument("email", type=email, required=True)
+user_edit_parser = reqparse.RequestParser()
+user_edit_parser.add_argument("username", type=str, required=True)
+user_edit_parser.add_argument("email", type=email, required=True)
+
+user_create_parser = deepcopy(user_edit_parser)
+user_create_parser.add_argument("password", type=password, required=True)
 
 @api.resource('/<int:model_id>')
 class UserResource(Resource): 
@@ -56,12 +59,11 @@ class UserResource(Resource):
         return self.query_user(model_id).to_dict()
 
     def put(self, model_id):
-        args = user_parser.parse_args()
-        if args["password"]:
-            abort(400, message="Password must be changed using password reset endpoint")
-        user = User.query.filter_by(id=model_id)
+        args = user_edit_parser.parse_args()
+        user = User.query.filter_by(id=model_id).first()
         user.username = args["username"]
         user.email = args["email"]
+        db.session.commit()
         return '', 201
 
 @api.resource("/jwt/retrieve")
