@@ -1,31 +1,15 @@
 from veggienet import validators
 from veggienet.models import User, save_to_database, db
+from veggienet.authentication import login, authentication_required
 
 from flask import session, g, request, current_app, Blueprint
 from flask_restful import Resource, Api, abort, reqparse
 from copy import deepcopy
 
-import jwt
 from werkzeug.security import check_password_hash
 
 users_bp = Blueprint('users', __name__, url_prefix='/users')
 api = Api(users_bp)
-
-def authentication_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        authenticated = g.get("authenticated", None)
-        if authenticated:
-            return f(*args, **kwargs)
-        elif authenticated == None:
-            try:
-                payload = jwt.decode(session["jwt"], current_app.secret_key, algorithm='HS256')
-                g.user = payload["user"]
-                g.authenticated = True
-            except Exception:
-                abort(403, "Authentication is required for this endpoint")
-        else:
-            abort(403, "Authentication is required for this endpoint") 
 
 def password(password):
     validators.validate_password(password)
@@ -66,11 +50,13 @@ class UserResource(Resource):
         db.session.commit()
         return '', 201
 
+login_parser = reqparse.RequestParser()
+login_parser.add_argument("username", type=str, required=True)
+login_parser.add_argument("password", type=str, required=True)
+
 @api.resource("/jwt/retrieve")
 class LoginResource(Resource):
     def post():
-        user = User.query.filter_by(username=request.data["username"])
-        if not check_password_hash(request.data["password"]):
-            abort(403, "Username or password is incorrect")
-        token = jwt.encode({"user": request.data["username"]}, current_app.secret_key, algorithm="HS256")
-        return {"jwt": token}, 202
+        args = login_parser.parse_args()
+        user = User.query.filter_by(username=args["username"])
+        return login(user.password, args["password"]), 202
