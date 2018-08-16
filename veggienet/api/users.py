@@ -4,7 +4,6 @@ from veggienet.authentication import login, authentication_required
 
 from flask import session, g, request, current_app, Blueprint
 from flask_restful import Resource, Api, abort, reqparse
-from copy import deepcopy
 
 from werkzeug.security import check_password_hash
 
@@ -23,13 +22,23 @@ def username(username):
     if ' ' in username:
         raise ValueError("Invalid username: cannot contain whitespace")
     return username
- 
-user_edit_parser = reqparse.RequestParser()
-user_edit_parser.add_argument("username", type=str, required=True)
-user_edit_parser.add_argument("email", type=email, required=True)
 
-user_create_parser = deepcopy(user_edit_parser)
-user_create_parser.add_argument("password", type=password, required=True)
+def get_user_edit_parser():
+    user_edit_parser = reqparse.RequestParser()
+    user_edit_parser.add_argument("username", type=str, required=True)
+    user_edit_parser.add_argument("email", type=email, required=True)
+    return user_edit_parser
+
+def get_user_create_parser():
+    user_create_parser = get_user_edit_parser()
+    user_create_parser.add_argument("password", type=password, required=True)
+    return user_create_parser
+
+def get_login_parser():
+    login_parser = reqparse.RequestParser()
+    login_parser.add_argument("username", type=str, required=True)
+    login_parser.add_argument("password", type=str, required=True)
+    return login_parser
 
 @api.resource('/<int:model_id>')
 class UserResource(Resource): 
@@ -43,20 +52,16 @@ class UserResource(Resource):
         return self.query_user(model_id).to_dict()
 
     def put(self, model_id):
-        args = user_edit_parser.parse_args()
+        args = get_user_edit_parser().parse_args()
         user = User.query.filter_by(id=model_id).first()
         user.username = args["username"]
         user.email = args["email"]
         db.session.commit()
         return '', 201
 
-login_parser = reqparse.RequestParser()
-login_parser.add_argument("username", type=str, required=True)
-login_parser.add_argument("password", type=str, required=True)
-
 @api.resource("/jwt/retrieve")
 class LoginResource(Resource):
     def post():
-        args = login_parser.parse_args()
+        args = get_login_parser().parse_args()
         user = User.query.filter_by(username=args["username"])
         return login(user.password, args["password"]), 202
