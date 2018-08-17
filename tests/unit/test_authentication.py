@@ -19,8 +19,8 @@ def test_invalid_authenticate():
     with app.app_context():
         with app.test_request_context():
             result = authenticate(token)
-            assert result == False
-            assert g.get("authenticated", None) == None
+            assert result != ''
+            assert g.get("authenticated") == False
             assert g.get("user", None) == None
 
 def test_login():
