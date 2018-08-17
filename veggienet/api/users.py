@@ -25,7 +25,7 @@ def username(username):
 
 def get_user_edit_parser():
     user_edit_parser = reqparse.RequestParser()
-    user_edit_parser.add_argument("username", type=str, required=True)
+    user_edit_parser.add_argument("username", type=username, required=True)
     user_edit_parser.add_argument("email", type=email, required=True)
     return user_edit_parser
 
@@ -57,6 +57,14 @@ class UserResource(Resource):
         user.username = args["username"]
         user.email = args["email"]
         db.session.commit()
+        return '', 201
+
+@api.resource('/')
+class UserCreateResource(Resource):
+    def post(self):
+        args = get_user_create_parser().parse_args()
+        user = User(args["username"], args["password"], args["email"], False)
+        save_to_database(user)
         return '', 201
 
 @api.resource("/jwt/retrieve")
