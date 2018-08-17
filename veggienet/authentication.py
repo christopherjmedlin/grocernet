@@ -31,4 +31,4 @@ def login(password_hash, password, username):
     if not check_password_hash(password_hash, password):
         return "Username or password is incorrect", 403
     token = jwt.encode({"user": username}, current_app.secret_key, algorithm="HS256")
-    return token, 202
+    return {"jwt": token.decode("utf-8")}, 202

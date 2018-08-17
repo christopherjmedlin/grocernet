@@ -1,4 +1,6 @@
 import pytest
+import json
+import jwt
 
 from veggienet import create_app
 from veggienet import models
@@ -68,3 +70,16 @@ def test_invalid_user_post(client, db, username, password, email):
                             "email": email, "password": password})
     assert response.status_code == 400
     assert b"Invalid" in response.data or b"Missing" in response.data
+
+def test_login(client, db):
+    response = None
+    user = models.User("user12345", "p@$$w0rd", "user12345@gmail.com", False)
+
+    with app.app_context():
+        models.save_to_database(user)
+        response = client.post('/users/jwt/retrieve', data={"username": "user12345",
+                                                            "password": "p@$$w0rd"})
+
+    assert response.status_code == 202
+    token = json.loads(response.data.decode('utf-8'))["jwt"].encode('utf-8')
+    assert jwt.decode(token, app.secret_key, algorithm='HS256')["user"] == "user12345"

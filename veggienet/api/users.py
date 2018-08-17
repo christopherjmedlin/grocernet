@@ -69,7 +69,7 @@ class UserCreateResource(Resource):
 
 @api.resource("/jwt/retrieve")
 class LoginResource(Resource):
-    def post():
+    def post(self):
         args = get_login_parser().parse_args()
-        user = User.query.filter_by(username=args["username"])
-        return login(user.password, args["password"])
+        user = User.query.filter_by(username=args["username"]).first()
+        return login(user.password, args["password"], args["username"])

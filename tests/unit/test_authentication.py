@@ -28,7 +28,7 @@ def test_login():
     with app.app_context():
         result = login(generate_password_hash("W0!fP@ck"), "W0!fP@ck", "user1124")
     token = result[0]
-    payload = jwt.decode(token, app.secret_key, algorithm='HS256')
+    payload = jwt.decode(token["jwt"], app.secret_key, algorithm='HS256')
 
     assert payload["user"] == "user1124"
     assert result[1] == 202
