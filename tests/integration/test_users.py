@@ -1,6 +1,7 @@
 import pytest
 import json
 import jwt
+import datetime
 
 from veggienet import create_app
 from veggienet import models
@@ -83,3 +84,17 @@ def test_login(client, db):
     assert response.status_code == 202
     token = json.loads(response.data.decode('utf-8'))["jwt"].encode('utf-8')
     assert jwt.decode(token, app.secret_key, algorithm='HS256')["user"] == "user12345"
+
+def test_jwt_refresh(client, db):
+    now = datetime.datetime.utcnow()
+    token = jwt.encode({"user": "12345", 
+                        "exp": now},
+                        app.secret_key).decode('utf-8')
+    response = client.get('/users/jwt/refresh',
+                headers={'Authorization': 'Bearer ' + token})
+
+    refreshed_token = json.loads(response.data.decode('utf-8'))["jwt"].encode('utf-8')
+    payload = jwt.decode(refreshed_token, app.secret_key)
+    assert response.status_code == 200
+    assert payload["user"] == "12345"
+    assert payload["exp"] > int(now.timestamp())

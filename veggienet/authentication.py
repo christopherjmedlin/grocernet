@@ -1,5 +1,6 @@
 import jwt
 import datetime
+from functools import wraps
 
 from flask import g, session, request, current_app
 from werkzeug.security import check_password_hash
@@ -18,6 +19,7 @@ def authentication_required(f):
             abort(403, message=err_message)
         
         return f(*args, **kwargs)
+    return decorated_function
 
 def authenticate(token):
     payload = None

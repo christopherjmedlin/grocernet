@@ -1,6 +1,6 @@
 from veggienet import validators
 from veggienet.models import User, save_to_database, db
-from veggienet.authentication import login, authentication_required
+from veggienet.authentication import login, authentication_required, create_jwt
 
 from flask import session, g, request, current_app, Blueprint
 from flask_restful import Resource, Api, abort, reqparse
@@ -70,6 +70,23 @@ class UserCreateResource(Resource):
 @api.resource("/jwt/retrieve")
 class LoginResource(Resource):
     def post(self):
+        """
+        If username and password is valid, returns a JWT containing the username,
+        intended to be used for authentication in the Authentication HTTP header.
+        """
         args = get_login_parser().parse_args()
         user = User.query.filter_by(username=args["username"]).first()
         return login(user.password, args["password"], args["username"])
+
+@api.resource("/jwt/refresh")
+class JWTRefreshResource(Resource):
+    method_decorators = [authentication_required]
+
+    def get(self):
+        """
+        Refreshes the expiration time for the JSON web token.
+
+        JWT still needs to be valid in order for this to work, if the JWT
+        expires the user needs to login again.
+        """
+        return {"jwt": create_jwt(g.get("user"), current_app.secret_key)}

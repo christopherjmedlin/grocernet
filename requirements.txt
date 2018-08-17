@@ -3,6 +3,7 @@ Werkzeug==0.14.1
 Flask-RESTful==0.3.6
 
 Flask-SQLAlchemy==2.3.2
+Flask-Migrate==2.2.1
 psycopg2-binary==2.7.5
 PyJWT==1.6.4
 passlib==1.7.1
