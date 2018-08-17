@@ -64,4 +64,4 @@ class LoginResource(Resource):
     def post():
         args = get_login_parser().parse_args()
         user = User.query.filter_by(username=args["username"])
-        return login(user.password, args["password"]), 202
+        return login(user.password, args["password"])
