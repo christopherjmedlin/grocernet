@@ -1,6 +1,7 @@
 from flask import Flask
 from .api.users import users_bp
 from .models import db
+from flask_migrate import Migrate
 
 def create_app(config_path='../instance/config.py', testing=False):
     app = Flask(__name__)
@@ -13,4 +14,6 @@ def create_app(config_path='../instance/config.py', testing=False):
         app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_DATABASE_URI']
 
     db.init_app(app)
+    migrate = Migrate(app, db)
+
     return app
