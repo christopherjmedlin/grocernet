@@ -30,6 +30,10 @@ class User(db.Model):
             "admin": self.admin
         }
 
+class MeasurementUnit(enum.Enum):
+    pound = 'lb'
+    basket = 'basket'
+    crop = 'crop'
 
 class Listing(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -38,7 +42,7 @@ class Listing(db.Model):
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.String(2000))
 
-    measurement_unit = db.Column(db.Enum('lb', 'basket', 'crop'), nullable=False)
+    measurement_unit = db.Column(db.Enum(MeasurementUnit), nullable=False)
     price_per_unit = db.Column(db.Integer, nullable=False)
 
     location = db.Column(db.String(400), nullable=False)
