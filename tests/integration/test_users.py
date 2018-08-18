@@ -10,6 +10,19 @@ from werkzeug.security import check_password_hash
 
 app = create_app(testing=True)
 
+TEST_PASSWORD = "!Lov3MyPiano"
+
+def query_user(user_id):
+    """
+    Helper for querying user from database with proper app context
+    """
+    with app.app_context():
+        return models.User.query.filter_by(id=user_id).first()
+
+def query_user_by_username(username):
+    with app.app_context():
+        return models.User.query.filter_by(username=username).first()
+
 @pytest.fixture(scope="module")
 def client():
     return app.test_client()
@@ -21,39 +34,39 @@ def db():
         models.db.create_all()
         return models.db
 
-def test_user_retrieve(client, db):
-    response = None
+@pytest.fixture(scope="function")
+def user():
     user = models.User("user234134", "!Lov3MyPiano",
                        "user234134@gmail.com", False)
-
     with app.app_context():
         models.save_to_database(user)
-        response = client.get('/users/' + str(user.id))
-    
-    assert b'"user234134"' in response.data
+        # re-query user so it isn't expired and SQLAlchemy doesn't
+        # attempt to refresh attributes
+        return query_user(user.id)
 
-def test_user_put(client, db):
-    response = None
-    user = models.User("user234134", "SterlingGmail20.15",
-                       "user234134@gmail.com", False)
+def test_user_retrieve(client, db, user):
+    response = client.get('/users/' + str(user.id))
+    data = response.data.decode('utf-8')
     
-    with app.app_context():
-        models.save_to_database(user)
-        response = client.put('/users/' + str(user.id),
-                data={"username": "user23413", "email": "user234134@gmail.com"})
-        user = models.User.query.filter_by(id=user.id).first()
+    assert user.username in data
+    assert user.password not in data
+    assert TEST_PASSWORD not in data
+
+def test_user_put(client, db, user):
+    response = client.put('/users/' + str(user.id),
+            data={"username": "user23413", "email": "user234134@gmail.com"})
+    user = query_user(user.id)
 
     assert user.username == 'user23413'
+    assert user.email == 'user234134@gmail.com'
         
 def test_valid_user_post(client, db):
-    response = None
-    user = None
-
-    with app.app_context():
-        response = client.post('/users/', data={"username": "user24315",
-                            "email": "user24315@gmail.com", "password": "s3cur3P@$$w0rd"})
-        user = models.User.query.filter_by(username="user24315").first()
-
+    response = client.post('/users/', data={"username": "user24315",
+                        "email": "user24315@gmail.com", "password": "s3cur3P@$$w0rd"})
+    user = query_user_by_username("user24315")
+    
+    assert user.password != "s3cur3P@$$w0rd"
+    assert user.email == "user24315@gmail.com"
     assert check_password_hash(user.password, "s3cur3P@$$w0rd")
     assert not user.admin
 
@@ -64,26 +77,19 @@ def test_valid_user_post(client, db):
     ("user73758", "s3cur3P@$$w0rd", "user73758@gmailcom")
 ])
 def test_invalid_user_post(client, db, username, password, email):
-    response = None
-
-    with app.app_context():
-        response = client.post('/users/', data={"username": username,
-                            "email": email, "password": password})
+    response = client.post('/users/', data={"username": username,
+                        "email": email, "password": password})
+        
     assert response.status_code == 400
     assert b"Invalid" in response.data or b"Missing" in response.data
 
-def test_login(client, db):
-    response = None
-    user = models.User("user12345", "p@$$w0rd", "user12345@gmail.com", False)
-
-    with app.app_context():
-        models.save_to_database(user)
-        response = client.post('/users/jwt/retrieve', data={"username": "user12345",
-                                                            "password": "p@$$w0rd"})
+def test_login(client, db, user):
+    response = client.post('/users/jwt/retrieve', data={"username": user.username,
+                                                            "password": TEST_PASSWORD})
+    token = json.loads(response.data.decode('utf-8'))["jwt"].encode('utf-8')
 
     assert response.status_code == 202
-    token = json.loads(response.data.decode('utf-8'))["jwt"].encode('utf-8')
-    assert jwt.decode(token, app.secret_key, algorithm='HS256')["user"] == "user12345"
+    assert jwt.decode(token, app.secret_key, algorithm='HS256')["user"] == "user234134"
 
 def test_jwt_refresh(client, db):
     now = datetime.datetime.utcnow()
@@ -95,6 +101,7 @@ def test_jwt_refresh(client, db):
 
     refreshed_token = json.loads(response.data.decode('utf-8'))["jwt"].encode('utf-8')
     payload = jwt.decode(refreshed_token, app.secret_key)
+
     assert response.status_code == 200
     assert payload["user"] == "12345"
     assert payload["exp"] > int(now.timestamp())
