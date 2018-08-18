@@ -40,6 +40,11 @@ def get_login_parser():
     login_parser.add_argument("password", type=str, required=True)
     return login_parser
 
+def get_email_confirmation_parser():
+    email_confirmation_parser = reqparse.RequestParser()
+    email_confirmation_parser.add_argument("token", type=str, required=True)
+    return email_confirmation_parser
+
 @api.resource('/<int:model_id>')
 class UserResource(Resource): 
     def query_user(self, model_id):
@@ -90,3 +95,9 @@ class JWTRefreshResource(Resource):
         expires the user needs to login again.
         """
         return {"jwt": create_jwt(g.get("user"), current_app.secret_key)}
+
+@api.resource("/email/confirmation")
+class EmailConfirmationResource(Resource):
+    def post(self):
+        token = get_email_confirmation_parser().parse_args()["token"]
+        
