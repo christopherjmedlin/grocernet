@@ -100,4 +100,10 @@ class JWTRefreshResource(Resource):
 class EmailConfirmationResource(Resource):
     def post(self):
         token = get_email_confirmation_parser().parse_args()["token"]
+        email = confirm_email_confirmation_token(token)
+
+        if email == False:
+            abort("Invalid email confirmation token", 400)
+        user = User.query.filter_by(email=email).first()
+        
         
