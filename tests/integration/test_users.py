@@ -5,8 +5,11 @@ import datetime
 
 from veggienet import create_app
 from veggienet import models
+from veggienet.email import mail
 
 from werkzeug.security import check_password_hash
+from itsdangerous import URLSafeSerializer
+from flask import g
 
 app = create_app(testing=True)
 
@@ -22,6 +25,11 @@ def query_user(user_id):
 def query_user_by_username(username):
     with app.app_context():
         return models.User.query.filter_by(username=username).first()
+
+def post_user(client):
+    response = client.post('/users/', data={"username": "user24315",
+                        "email": "user24315@gmail.com", "password": "s3cur3P@$$w0rd"})
+    return response
 
 @pytest.fixture(scope="module")
 def client():
@@ -61,10 +69,16 @@ def test_user_put(client, db, user):
     assert user.email == 'user234134@gmail.com'
         
 def test_valid_user_post(client, db):
-    response = client.post('/users/', data={"username": "user24315",
-                        "email": "user24315@gmail.com", "password": "s3cur3P@$$w0rd"})
+    response = None
+
+
+    with mail.record_messages() as outbox:
+        response = post_user(client)
+        assert len(outbox) == 1
+        assert app.config["FRONTEND_HOST"] in outbox[0].html
+
     user = query_user_by_username("user24315")
-    
+
     assert user.password != "s3cur3P@$$w0rd"
     assert user.email == "user24315@gmail.com"
     assert check_password_hash(user.password, "s3cur3P@$$w0rd")
@@ -105,3 +119,12 @@ def test_jwt_refresh(client, db):
     assert response.status_code == 200
     assert payload["user"] == "12345"
     assert payload["exp"] > int(now.timestamp())
+
+def test_email_confirmation(client, db, user):
+    s = URLSafeSerializer(app.secret_key)
+    token = s.dumps(user.email)
+    response = client.post('/users/email/confirmation', data={"token": token})
+
+    assert response.status_code == 201
+    user = query_user(user_id=user.id)
+    assert user.email_confirmed

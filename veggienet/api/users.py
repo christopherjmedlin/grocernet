@@ -1,8 +1,9 @@
 from veggienet import validators
 from veggienet.models import User, save_to_database, db
 from veggienet.authentication import login, authentication_required, create_jwt
+from veggienet.email import generate_email_confirmation_token, confirm_email_confirmation_token, send_email
 
-from flask import session, g, request, current_app, Blueprint
+from flask import session, g, request, current_app, Blueprint, render_template
 from flask_restful import Resource, Api, abort, reqparse
 
 from werkzeug.security import check_password_hash
@@ -64,12 +65,20 @@ class UserResource(Resource):
         db.session.commit()
         return '', 201
 
+def send_confirmation_email(email):
+    token = generate_email_confirmation_token(email, current_app.secret_key)
+    confirm_url = current_app.config["FRONTEND_HOST"] + '/confirm-email?token=' + token
+    html = render_template('activate_email.html', confirm_url=confirm_url)
+    send_email("Welcome to Veggienet!", email, html)
+
 @api.resource('/')
 class UserCreateResource(Resource):
     def post(self):
         args = get_user_create_parser().parse_args()
         user = User(args["username"], args["password"], args["email"], False)
         save_to_database(user)
+        send_confirmation_email(args["email"])
+
         return '', 201
 
 @api.resource("/jwt/retrieve")
@@ -100,10 +109,20 @@ class JWTRefreshResource(Resource):
 class EmailConfirmationResource(Resource):
     def post(self):
         token = get_email_confirmation_parser().parse_args()["token"]
-        email = confirm_email_confirmation_token(token)
+        email = confirm_email_confirmation_token(token, current_app.secret_key)
 
         if email == False:
             abort("Invalid email confirmation token", 400)
+
         user = User.query.filter_by(email=email).first()
-        
-        
+        user.email_confirmed = True
+        db.session.commit()
+        return '', 201
+
+@api.resource("/email/confirmation/resend")
+class EmailConfirmationResendResource(Resource):
+    method_decorators = [authentication_required]
+
+    def get(self):
+        send_confirmation_email(g.get("user").email)
+        return {"message": "Email sent"}, '200'
