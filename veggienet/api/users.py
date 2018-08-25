@@ -30,21 +30,11 @@ def get_user_edit_parser():
     user_edit_parser.add_argument("email", type=email, required=True)
     return user_edit_parser
 
-def get_user_create_parser():
-    user_create_parser = get_user_edit_parser()
-    user_create_parser.add_argument("password", type=password, required=True)
-    return user_create_parser
-
 def get_login_parser():
     login_parser = reqparse.RequestParser()
     login_parser.add_argument("username", type=str, required=True)
     login_parser.add_argument("password", type=str, required=True)
     return login_parser
-
-def get_email_confirmation_parser():
-    email_confirmation_parser = reqparse.RequestParser()
-    email_confirmation_parser.add_argument("token", type=str, required=True)
-    return email_confirmation_parser
 
 @api.resource('/<int:model_id>')
 class UserResource(Resource): 
@@ -63,22 +53,6 @@ class UserResource(Resource):
         user.username = args["username"]
         user.email = args["email"]
         db.session.commit()
-        return '', 201
-
-def send_confirmation_email(email):
-    token = generate_email_confirmation_token(email, current_app.secret_key)
-    confirm_url = current_app.config["FRONTEND_HOST"] + '/confirm-email?token=' + token
-    html = render_template('activate_email.html', confirm_url=confirm_url)
-    send_email("Welcome to Veggienet!", email, html)
-
-@api.resource('/')
-class UserCreateResource(Resource):
-    def post(self):
-        args = get_user_create_parser().parse_args()
-        user = User(args["username"], args["password"], args["email"], False)
-        save_to_database(user)
-        send_confirmation_email(args["email"])
-
         return '', 201
 
 @api.resource("/jwt/retrieve")
@@ -104,25 +78,3 @@ class JWTRefreshResource(Resource):
         expires the user needs to login again.
         """
         return {"jwt": create_jwt(g.get("user"), current_app.secret_key)}
-
-@api.resource("/email/confirmation")
-class EmailConfirmationResource(Resource):
-    def post(self):
-        token = get_email_confirmation_parser().parse_args()["token"]
-        email = confirm_email_confirmation_token(token, current_app.secret_key)
-
-        if email == False:
-            abort("Invalid email confirmation token", 400)
-
-        user = User.query.filter_by(email=email).first()
-        user.email_confirmed = True
-        db.session.commit()
-        return '', 201
-
-@api.resource("/email/confirmation/resend")
-class EmailConfirmationResendResource(Resource):
-    method_decorators = [authentication_required]
-
-    def get(self):
-        send_confirmation_email(g.get("user").email)
-        return {"message": "Email sent"}, '200'
