@@ -1,5 +1,6 @@
 from flask import Flask
 from .api.users import users_bp
+from .views import views_bp
 from .models import db
 from .email import mail
 from flask_migrate import Migrate
@@ -11,6 +12,7 @@ def create_app(config_path='../instance/config.py', testing=False):
     app.config['TESTING'] = testing
 
     app.register_blueprint(users_bp)
+    app.register_blueprint(views_bp)
 
     if testing:
         app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_DATABASE_URI']

@@ -8,7 +8,7 @@ from flask_restful import Resource, Api, abort, reqparse
 
 from werkzeug.security import check_password_hash
 
-users_bp = Blueprint('users', __name__, url_prefix='/users')
+users_bp = Blueprint('users', __name__, url_prefix='/api/v1/users')
 api = Api(users_bp)
 
 def password(password):
