@@ -1,5 +1,6 @@
 a {
     text-decoration: none;
+    cursor: pointer;
 }
 
 .logo {
@@ -18,6 +19,7 @@ a {
 body {
     margin: 0px;
     padding: 0px;
+    font-family: 'Open Sans', sans-serif;
 }
 
 #top-nav { 
@@ -89,6 +91,10 @@ body {
     color: grey;
 }
 
+a:hover {
+    color: grey;
+}
+
 .button-icon:focus {
     color: lightgrey;
 }
@@ -99,7 +105,7 @@ body {
     }
 }
 
-@media (min-width: 700px) {
+@media (min-width: 800px) {
     #search-dropdown-button {
         display: none;
     }
