@@ -7,6 +7,9 @@
 {% block content %}
 <div class="rounded-box" id="login-box">
     <p>Log in to Veggienet</p>
+    {% if error %}
+    <p class="error"> {{ error }}</p>
+    {% endif %}
     <form action="{{ url_for('views.login') }}" method="post">
         <input class="rounded-input vertical-spaced" name="username" type="text" placeholder="Username"><br />
         <input class="rounded-input vertical-spaced" name="password" type="password" placeholder="Password"><br />

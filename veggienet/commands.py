@@ -1,6 +1,7 @@
 from .wsgi import app
 from getpass import getpass
-from .models import User, get_db
+from .models import User, db
+from flask import Blueprint
 
 @app.cli.command('initdb')
 def initdb():
@@ -22,6 +23,5 @@ def createuser():
 
     user = User(username, password, email, admin)
 
-    db = get_db()
     db.session.add(user)
     db.session.commit()

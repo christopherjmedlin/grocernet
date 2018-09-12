@@ -10,6 +10,11 @@ footer {
     font-size: 13px;
 }
 
+.error {
+    color: red;
+    font-style: italic;
+}
+
 .vertical-spaced {
     margin-top: 10px;
     margin-bottom: 10px;
