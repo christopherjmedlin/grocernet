@@ -1,11 +1,9 @@
+@import "components/topnav";
+
 a {
     text-decoration: none;
     cursor: pointer;
     color: black;
-}
-
-#search-dropdown-button {
-    margin-right: 10px;
 }
 
 footer {
@@ -33,14 +31,6 @@ ul {
     text-align: center;
 }
 
-.logo {
-    display: inline-block;
-}
-
-.logo img {
-    width: 170px;
-}
-
 .button-icon {
     color: black;
     cursor: pointer;
@@ -57,78 +47,11 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
-#top-nav { 
-    padding: 10px;
-    border-bottom: 1px solid lightgrey;
-    height: 45px;
-    box-shadow: 5px 1px 5px 1px #ccc;
-}
-
-.navbar-nav {
-    margin: 0 auto;
-    height: 100%;
-    position: relative;
-    max-width: 1000px;
-}
-
-.search-bar {
-    position: relative;
-    display: inline-block;
-    margin-left: 30px;
-    height: 30px;
-    width: 40%;
-    max-width: 500px;
-    border-radius: 5px;
-    border: 1px solid #dddddd;
-    bottom: 4px;
-    overflow: hidden;
-    background-color: white;
-}
-
 .rounded-input {
     border-radius: 5px;
     border: 1px solid #dddddd;
     height: 30px;
     outline-width: 0;
-}
-
-.search-bar-input {
-    float: right;
-    border: none;
-    outline-width: 0;
-    height: 30px;
-    width: 42%;
-}
-
-#search-input {
-    border-right: 1px solid #dddddd;
-}
-
-#nav-buttons {
-    position: relative;
-    top: 10px;
-    float: right;
-}
-
-#login-signup {
-    margin-left: 10px;
-}
-
-#nav-buttons li {
-    display: inline;
-}
-
-#location-input {
-    margin-left: 7px;
-}
-
-.search-button {
-    border: none;
-    background-color: transparent;
-    color: black;
-    width: 10%;
-    height: 100%;
-    border-right: 1px solid #dddddd;
 }
 
 .button-icon:hover {
