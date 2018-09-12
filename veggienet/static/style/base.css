@@ -1,6 +1,27 @@
 a {
     text-decoration: none;
     cursor: pointer;
+    color: black;
+}
+
+footer {
+    border-top: 1px solid lightgrey;
+    text-align: center;
+    font-size: 13px;
+}
+
+.vertical-spaced {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+ul {
+    padding: 0;
+    list-style: none;
+}
+
+#content {
+    text-align: center;
 }
 
 .logo {
@@ -14,6 +35,11 @@ a {
 .button-icon {
     color: black;
     cursor: pointer;
+}
+
+.rounded-box {
+    border: 1px solid lightgrey;
+    border-radius: 20px;
 }
 
 body {
@@ -46,6 +72,13 @@ body {
     border: 1px solid #dddddd;
     bottom: 4px;
     overflow: hidden;
+}
+
+.rounded-input {
+    border-radius: 5px;
+    border: 1px solid #dddddd;
+    height: 30px;
+    outline-width: 0;
 }
 
 .search-bar-input {

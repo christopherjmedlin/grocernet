@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style/login.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="rounded-box" id="login-box">
+    <p>Log in to Veggienet</p>
+    <form action="{{ url_for('views.login') }}" method="post">
+        <input class="rounded-input vertical-spaced" name="username" type="text" placeholder="Username"><br />
+        <input class="rounded-input vertical-spaced" name="password" type="password" placeholder="Password"><br />
+        <input name="redirect" type="hidden" value="{{ redirect }}">
+        <input class="vertical-spaced" type="submit">
+    </form>
+</div>
+{% endblock %}
