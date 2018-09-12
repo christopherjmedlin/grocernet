@@ -6,7 +6,7 @@ from .email import mail
 from flask_migrate import Migrate
 
 def create_app(config_path='../instance/config.py', testing=False):
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder="static/dist")
     app.config.from_pyfile('../instance/config.py')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['TESTING'] = testing

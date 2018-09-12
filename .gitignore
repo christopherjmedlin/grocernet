@@ -104,3 +104,6 @@ bower
 
 # Flask config
 instance/
+
+node_modules
+veggienet/static/dist
