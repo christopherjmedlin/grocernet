@@ -14,9 +14,13 @@
         </div>
         <div id="nav-buttons">
             <a id="search-dropdown-button"><i class="fas fa-search button-icon"></i></a>
+            {% if session.authenticated %}
+            <a>{{ session.user }}<i class="fas fa-caret-down"></i></a>
+            {% else %}
             <span id="login-signup">
                 <a href="{{ url_for('views.login') }}">Log In</a> or <a>Sign Up</a>
             </span>
+            {% endif %}
         </div>
     </nav>
 </div>

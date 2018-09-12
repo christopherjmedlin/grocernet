@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect, session
 from veggienet.authentication import login
 from veggienet.models import User
 from werkzeug.security import check_password_hash
@@ -17,6 +17,8 @@ def login():
         if not user or not check_password_hash(user.password, request.form.get('password')):
             err = "Invalid username or password"
         else:
+            session["authenticated"] = True
+            session["user"] = user.username
             return redirect(request.form.get('redirect'))
     
     redirect_url=request.args.get("redirect", "/")    

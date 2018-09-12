@@ -4,6 +4,10 @@ a {
     color: black;
 }
 
+#search-dropdown-button {
+    margin-right: 10px;
+}
+
 footer {
     border-top: 1px solid lightgrey;
     text-align: center;
@@ -57,6 +61,7 @@ body {
     padding: 10px;
     border-bottom: 1px solid lightgrey;
     height: 45px;
+    box-shadow: 5px 1px 5px 1px #ccc;
 }
 
 .navbar-nav {
@@ -77,6 +82,7 @@ body {
     border: 1px solid #dddddd;
     bottom: 4px;
     overflow: hidden;
+    background-color: white;
 }
 
 .rounded-input {
