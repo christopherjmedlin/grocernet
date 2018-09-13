@@ -19,7 +19,7 @@
             <div class="dropdown" id="account-dropdown">
                 <a>My Profile</a>
                 <a>Account Settings</a>
-                <a>Logout</a>
+                <a href="{{ url_for('views.logout') }}">Logout</a>
             </div>
             {% else %}
             <span id="login-signup">

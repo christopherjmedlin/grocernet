@@ -23,3 +23,8 @@ def login():
     
     redirect_url=request.args.get("redirect", "/")    
     return render_template('login.html', redirect_url=redirect_url, error=err)
+
+@views_bp.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session.clear()
+    return redirect('/')
