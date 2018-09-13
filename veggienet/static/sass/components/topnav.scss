@@ -74,4 +74,17 @@
     #nav-buttons li {
         display: inline;
     }
+
+
+    @media (max-width: 800px) {
+        .search-bar {
+            display: none;
+        }
+    }
+
+    @media (min-width: 800px) {
+        #search-dropdown-button {
+            display: none;
+        }
+    }
 }

@@ -1,0 +1,31 @@
+.dropdown {
+    display: block;
+    position: absolute;
+    top: 30px;
+    width: 150px;
+    text-align: center;
+    font-size: 13px;
+    z-index: 999;
+
+    a {
+        line-height: 30px;
+        height: 30px;
+        color: grey;
+        display: block;
+        width: 100%;
+        border-bottom: 1px solid lightgrey;
+    }
+
+    a:hover {
+        background-color: lightgrey;
+        color: black !important;
+    }
+    
+    box-shadow: 0px 0px 3px 1px #cccccc;
+    background-color: white;
+}
+
+.dropdown-header {
+    background-color: lightgrey;
+    font-weight: bold;
+}
