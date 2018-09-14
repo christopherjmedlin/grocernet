@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, session, current_app, url_for
 from veggienet.authentication import login
 from veggienet.forms import PasswordResetForm, PasswordResetEmailForm
-from veggienet.models import User
+from veggienet.models import User, db
 from veggienet.email import generate_email_confirmation_token, send_email, confirm_email_confirmation_token
 from itsdangerous import URLSafeSerializer
 from werkzeug.security import check_password_hash
@@ -48,7 +48,6 @@ def logout():
 
 @views_bp.route('/password/reset', methods=["GET", "POST"])
 def password_reset():
-    err = ""
     form = PasswordResetEmailForm()
 
     if form.validate_on_submit():
@@ -66,7 +65,7 @@ def password_reset():
 
     if "email" in form.errors:
         err = form.errors["email"][0]
-    return render_template('password-reset.html', form=form, error=err)
+    return render_template('password-reset.html', form=form)
 
 @views_bp.route('/password/reset/email-sent')
 def password_reset_email_sent():
@@ -74,6 +73,21 @@ def password_reset_email_sent():
 
 @views_bp.route('/password/reset/<token>', methods=["GET", "POST"])
 def password_reset_with_token(token):
+    err = ""
+
     email = confirm_email_confirmation_token(token, current_app.secret_key)
+    if not email:
+        return redirect(url_for("views.password_reset"))
+    user = User.query.filter_by(email=email).first()
+
     form = PasswordResetForm()
-    return render_template('password-reset-token.html', form=form)
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        return redirect(url_for("views.password_reset_success"))
+   
+    return render_template('password-reset-token.html', form=form, token=token, username=user.username)
+
+@views_bp.route('/password/success')
+def password_reset_success():
+    return render_template("password-reset-success.html")
