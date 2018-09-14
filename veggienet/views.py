@@ -1,9 +1,25 @@
-from flask import Blueprint, render_template, request, redirect, session
+from flask import Blueprint, render_template, request, redirect, session, current_app, url_for
 from veggienet.authentication import login
+from veggienet.forms import PasswordResetForm, PasswordResetEmailForm
 from veggienet.models import User
+from veggienet.email import generate_email_confirmation_token, send_email, confirm_email_confirmation_token
+from itsdangerous import URLSafeSerializer
 from werkzeug.security import check_password_hash
+from functools import wraps
 
 views_bp = Blueprint('views', __name__)
+
+def authenticated_view(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        try:
+            if session["authenticated"]:
+                return f(*args, **kwargs)
+        except:
+            pass
+        return redirect('/login?redirect=' + request.path)
+
+    return decorated_function
 
 @views_bp.route('/')
 def index():
@@ -19,12 +35,45 @@ def login():
         else:
             session["authenticated"] = True
             session["user"] = user.username
+            session["email"] = user.email
             return redirect(request.form.get('redirect'))
     
     redirect_url=request.args.get("redirect", "/")    
     return render_template('login.html', redirect_url=redirect_url, error=err)
 
-@views_bp.route('/logout', methods=['GET', 'POST'])
+@views_bp.route('/logout')
 def logout():
     session.clear()
     return redirect('/')
+
+@views_bp.route('/password/reset', methods=["GET", "POST"])
+def password_reset():
+    err = ""
+    form = PasswordResetEmailForm()
+
+    if form.validate_on_submit():
+        # check if there is actually a user associated with this email
+        email = form.email.data
+        if User.query.filter_by(email=email).first():
+            token = generate_email_confirmation_token(email, current_app.secret_key)
+            reset_url = current_app.config["HOST"] + url_for("views.password_reset_with_token", token=token)
+
+            send_email("Reset Password", email,
+                    render_template('email/password-reset.html', reset_url=reset_url))
+        
+            session["password_reset_email"] = email
+        return redirect("/password/reset/email-sent")
+
+    if "email" in form.errors:
+        err = form.errors["email"][0]
+    return render_template('password-reset.html', form=form, error=err)
+
+@views_bp.route('/password/reset/email-sent')
+def password_reset_email_sent():
+    return render_template('password-reset-email-sent.html')
+
+@views_bp.route('/password/reset/<token>', methods=["GET", "POST"])
+def password_reset_with_token(token):
+    email = confirm_email_confirmation_token(token, current_app.secret_key)
+    form = PasswordResetForm()
+    return render_template('password-reset-token.html', form=form)
