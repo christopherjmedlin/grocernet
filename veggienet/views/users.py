@@ -2,28 +2,11 @@ from flask import Blueprint, render_template, request, redirect, session, curren
 from veggienet.authentication import login
 from veggienet.forms import PasswordResetForm, PasswordResetEmailForm
 from veggienet.models import User, db
+from veggienet.views import authenticated_view, views_bp
 from veggienet.email import generate_email_confirmation_token, send_email, confirm_email_confirmation_token
 from itsdangerous import URLSafeSerializer
 from werkzeug.security import check_password_hash
 from functools import wraps
-
-views_bp = Blueprint('views', __name__)
-
-def authenticated_view(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        try:
-            if session["authenticated"]:
-                return f(*args, **kwargs)
-        except:
-            pass
-        return redirect('/login?redirect=' + request.path)
-
-    return decorated_function
-
-@views_bp.route('/')
-def index():
-    return render_template('index.html')
 
 @views_bp.route('/login', methods=['GET', 'POST'])
 def login():
