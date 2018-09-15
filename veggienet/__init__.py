@@ -2,7 +2,7 @@ from flask import Flask
 from .users.api import users_api_bp
 from .users.views import users_views_bp
 from .db import db
-from .email import mail
+from .util.email import mail
 from flask_migrate import Migrate
 
 def create_app(config_path='../instance/config.py', testing=False):

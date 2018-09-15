@@ -1,8 +1,8 @@
-from veggienet import validators
+from veggienet.util import validators
 from .models import User
 from veggienet.db import save_to_database, db
-from veggienet.authentication import login, authentication_required, create_jwt
-from veggienet.email import generate_email_confirmation_token, confirm_email_confirmation_token, send_email
+from veggienet.util.authentication import login, authentication_required, create_jwt
+from veggienet.util.email import generate_email_confirmation_token, confirm_email_confirmation_token, send_email
 
 from flask import session, g, request, current_app, Blueprint, render_template
 from flask_restful import Resource, Api, abort, reqparse

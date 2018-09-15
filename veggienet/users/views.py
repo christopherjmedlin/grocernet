@@ -1,10 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, session, current_app, url_for
-from veggienet.authentication import login
 from .forms import PasswordResetForm, PasswordResetEmailForm, SignUpForm
 from .models import User
 from veggienet.db import db, save_to_database
-from veggienet.authentication import authenticated_view
-from veggienet.email import generate_email_confirmation_token, send_email, confirm_email_confirmation_token
+from veggienet.util.authentication import authenticated_view, login
+from veggienet.util.email import generate_email_confirmation_token, send_email, confirm_email_confirmation_token
 from itsdangerous import URLSafeSerializer
 from werkzeug.security import check_password_hash
 from functools import wraps
