@@ -73,7 +73,9 @@ def password_reset():
 
 @users_views_bp.route('/password/reset/email-sent')
 def password_reset_email_sent():
-    return render_template('password-reset-email-sent.html')
+    if "password_reset_email" in session:
+        return render_template('password-reset-email-sent.html')
+    return redirect(url_for("users_views.password_reset"))
 
 @users_views_bp.route('/password/reset/<token>', methods=["GET", "POST"])
 def password_reset_with_token(token):
