@@ -1,4 +1,6 @@
 import pytest
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 def pytest_addoption(parser):
     parser.addoption(
@@ -18,22 +20,26 @@ def pytest_addoption(parser):
     )
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def test_server_url(request):
     return request.config.getoption("--testprotocol") + "://" + \
            request.config.getoption("--testhost") + ":" + \
            request.config.getoption("--testport")
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def test_user(request):
     return request.config.getoption("--testuser")
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def test_password(request):
     return request.config.getoption("--testpassword")
 
-@pytest.fixture
-def selenium(selenium, test_server_url):
-    # always start on homepage
+@pytest.fixture(scope='session')
+def selenium(test_server_url):
+    chrome_options = Options()
+    chrome_options.add_argument("start-fullscreen")
+    
+    selenium = webdriver.Chrome(chrome_options=chrome_options)
     selenium.get(test_server_url)
-    return selenium
+    yield selenium
+    selenium.quit()
