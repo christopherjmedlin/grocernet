@@ -12,5 +12,4 @@ PyJWT==1.6.4
 passlib==1.7.1
 itsdangerous==0.24
 
-pytest==3.4.1
 gunicorn==19.8.1
