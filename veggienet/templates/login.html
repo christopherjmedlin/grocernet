@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="rounded-box" id="login-box">
+<div class="rounded-box form-box" id="login-box">
     <p>Log in to Veggienet</p>
     {% if error %}
     <p class="error"> {{ error }}</p>
@@ -16,6 +16,7 @@
         <input name="redirect" type="hidden" value="{{ redirect }}">
         <input class="vertical-spaced" type="submit" value="Log In">
     </form>
-    <a href="{{ url_for("views.password_reset") }}">Forgot password?</a>
+    <a href="{{ url_for("views.password_reset") }}">Forgot password?</a><br />
+    <a href="{{ url_for("views.signup") }}">Don't have an account? Sign Up.</a>
 </div>
 {% endblock %}

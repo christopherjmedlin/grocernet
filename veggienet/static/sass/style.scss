@@ -96,14 +96,15 @@ a:hover {
     }
 }
 
-#login-box {
+.form-box {
     margin-top: 100px;
     margin-bottom: 100px;
     max-width: 600px;
     width: 50%;
     display: inline-block;
-    height: 300px;
-    padding-top: 50px;
+    min-height: 300px;
+    padding-top: 30px;
+    padding-bottom: 30px;
 
     a {
         font-size: 10px;

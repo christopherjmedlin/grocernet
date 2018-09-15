@@ -20,8 +20,7 @@ def email(email):
     return email
 
 def username(username):
-    if ' ' in username:
-        raise ValueError("Invalid username: cannot contain whitespace")
+    validators.validate_username(username)
     return username
 
 def get_user_edit_parser():

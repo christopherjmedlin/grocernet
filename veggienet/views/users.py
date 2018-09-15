@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, session, current_app, url_for
 from veggienet.authentication import login
-from veggienet.forms import PasswordResetForm, PasswordResetEmailForm
-from veggienet.models import User, db
+from veggienet.forms import PasswordResetForm, PasswordResetEmailForm, SignUpForm
+from veggienet.models import User, db, save_to_database
 from veggienet.views import authenticated_view, views_bp
 from veggienet.email import generate_email_confirmation_token, send_email, confirm_email_confirmation_token
 from itsdangerous import URLSafeSerializer
@@ -28,6 +28,21 @@ def login():
 def logout():
     session.clear()
     return redirect('/')
+
+@views_bp.route('/signup', methods=["GET", "POST"])
+def signup():
+    form = SignUpForm()
+
+    if form.validate_on_submit():
+        if User.query.filter_by(username=form.username.data).first():
+            form.errors["username"] = ["Username already taken"]
+        else:
+            user = User(form.username.data, form.password.data, 
+                    form.email.data, False)
+            save_to_database(user)
+            return redirect(url_for("views.index"))
+
+    return render_template("signup.html", form=form)
 
 @views_bp.route('/password/reset', methods=["GET", "POST"])
 def password_reset():

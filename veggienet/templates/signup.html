@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="rounded-box form-box" id="signup-box">
+    <p>Create New Account</p>
+    <form action="{{ url_for('views.signup') }}" method="post">
+        {{ form.csrf_token }}
+
+        {% if "username" in form.errors %}
+        <p class="error">{{ form.errors["username"][0] }}</p>
+        {% endif %}
+        {{ form.username(class_="rounded-input", placeholder="Username") }}<br /><br />
+
+        {% if "email" in form.errors %}
+        <p class="error">{{ form.errors["email"][0] }}</p>
+        {% endif %}
+        {{ form.email(class_="rounded-input", placeholder="Email") }}<br /><br />
+
+        {% if "password" in form.errors %}
+        <p class="error">{{ form.errors["password"][0] }}</p>
+        {% endif %}
+        {{ form.password(class_="rounded-input", placeholder="Password") }}<br /><br />
+
+        {% if "confirm" in form.errors %}
+        <p class="error">{{ form.errors["confirm"][0] }}</p>
+        {% endif %}
+        {{ form.confirm(class_="rounded-input", placeholder="Confirm Password") }}<br /><br />
+
+        <input type="submit">
+    </form>
+</div>
+{% endblock %}
+
