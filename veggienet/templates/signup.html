@@ -3,7 +3,7 @@
 {% block content %}
 <div class="rounded-box form-box" id="signup-box">
     <p>Create New Account</p>
-    <form action="{{ url_for('views.signup') }}" method="post">
+    <form action="{{ url_for('users_views.signup') }}" method="post">
         {{ form.csrf_token }}
 
         {% if "username" in form.errors %}

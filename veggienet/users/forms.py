@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, HiddenField, StringField
 from wtforms.validators import EqualTo, InputRequired, Email, ValidationError
-from .validators import validate_password, validate_username
+from veggienet.validators import validate_password, validate_username
 
 def username_validator(form, field):
     try:

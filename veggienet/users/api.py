@@ -1,5 +1,6 @@
 from veggienet import validators
-from veggienet.models import User, save_to_database, db
+from .models import User
+from veggienet.db import save_to_database, db
 from veggienet.authentication import login, authentication_required, create_jwt
 from veggienet.email import generate_email_confirmation_token, confirm_email_confirmation_token, send_email
 
@@ -8,8 +9,8 @@ from flask_restful import Resource, Api, abort, reqparse
 
 from werkzeug.security import check_password_hash
 
-users_bp = Blueprint('users', __name__, url_prefix='/api/v1/users')
-api = Api(users_bp)
+users_api_bp = Blueprint('users_api', __name__, url_prefix='/api/v1/users')
+api = Api(users_api_bp)
 
 def password(password):
     validators.validate_password(password)

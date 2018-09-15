@@ -21,6 +21,18 @@ def authentication_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def authenticated_view(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        try:
+            if session["authenticated"]:
+                return f(*args, **kwargs)
+        except:
+            pass
+        return redirect('/login?redirect=' + request.path)
+
+    return decorated_function
+
 def authenticate(token):
     payload = None
     try:

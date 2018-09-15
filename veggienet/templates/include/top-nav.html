@@ -1,7 +1,7 @@
 <div id="top-nav">
     <nav class="navbar-nav">
         <div class="logo">
-            <a href="{{ url_for('views.index') }}">
+            <a href="{{ url_for('users_views.index') }}">
                 <img src="{{ url_for('static', filename='img/logo.svg') }}">
             </a>
         </div>
@@ -19,12 +19,12 @@
             <div class="dropdown" id="account-dropdown">
                 <a>My Profile</a>
                 <a>Account Settings</a>
-                <a href="{{ url_for('views.logout') }}">Logout</a>
+                <a href="{{ url_for('users_views.logout') }}">Logout</a>
             </div>
             {% else %}
             <span id="login-signup">
-                <a href="{{ url_for('views.login') }}">Log In</a> or 
-                <a href="{{ url_for('views.signup') }}">Sign Up</a>
+                <a href="{{ url_for('users_views.login') }}">Log In</a> or 
+                <a href="{{ url_for('users_views.signup') }}">Sign Up</a>
             </span>
             {% endif %}
         </div>

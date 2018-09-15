@@ -1,6 +1,7 @@
 from .wsgi import app
 from getpass import getpass
-from .models import User, db
+from veggienet.users.models import User
+from veggienet.db import db
 from flask import Blueprint
 
 @app.cli.command('initdb')
