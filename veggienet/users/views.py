@@ -3,8 +3,7 @@ from .forms import PasswordResetForm, PasswordResetEmailForm, SignUpForm
 from .models import User
 from veggienet.db import db, save_to_database
 from veggienet.util.authentication import authenticated_view, login
-from veggienet.util.email import generate_email_confirmation_token, send_email, confirm_email_confirmation_token
-from itsdangerous import URLSafeSerializer
+from veggienet.util.email import generate_email_confirmation_token, send_email, confirm_email_confirmation_token, send_activation_email
 from werkzeug.security import check_password_hash
 from functools import wraps
 
@@ -22,6 +21,10 @@ def login():
         if not user or not check_password_hash(user.password, request.form.get('password')):
             err = "Invalid username or password"
         else:
+            if not user.email_confirmed:
+                send_activation_email(user, current_app.secret_key)
+                return redirect(url_for("users_views.verification_email_sent"))
+                
             session["authenticated"] = True
             session["user"] = user.username
             session["email"] = user.email
@@ -45,10 +48,36 @@ def signup():
         else:
             user = User(form.username.data, form.password.data, 
                     form.email.data, False)
+            user.email_confirmed = False
             save_to_database(user)
-            return redirect(url_for("users_views.index"))
+            session["verification_email"] = user.email
+            
+            send_activation_email(user, current_app.secret_key)
+            return redirect(url_for("users_views.verification_email_sent"))
 
     return render_template("signup.html", form=form)
+
+@users_views_bp.route('/email/verification-sent')
+def verification_email_sent():
+    return render_template("verification-email-sent.html")
+
+@users_views_bp.route('/email/verify/<token>')
+def verify_email(token):
+    email = None
+    try:
+        email = confirm_email_confirmation_token(token, current_app.secret_key)
+    except:
+        return render_template("verify-email.html", invalid_token=True)
+
+    user = User.query.filter_by(email=email).first()
+    if user:
+        user.email_confirmed = True
+        db.session.commit()
+    else:
+        return render_template("verify-email.html", invalid_token=True)
+
+    return render_template("verify-email.html", invalid_token=False)
+    
 
 @users_views_bp.route('/password/reset', methods=["GET", "POST"])
 def password_reset():

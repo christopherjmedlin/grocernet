@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p style="margin-top: 200px; margin-bottom: 200px;">
+    {% if invalid_token %}
+    Invalid email token.
+    {% else %}
+    Your account has been successfully verified!
+    {% endif %}
+</p>
+{% endblock %}
