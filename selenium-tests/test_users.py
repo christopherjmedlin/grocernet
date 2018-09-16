@@ -43,6 +43,14 @@ def test_valid_login(selenium, test_server_url, test_user, test_password):
     account_dropdown_button = selenium.find_element(By.ID, "account-dropdown-button")
     assert test_user in account_dropdown_button.text
 
+def test_logout(selenium, test_server_url):
+    selenium.get(test_server_url + "/logout")
+    
+    assert selenium.current_url == test_server_url + "/"
+    login_signup = selenium.find_element(By.ID, "login-signup")
+    assert "Log In" in login_signup.text
+    assert "Sign Up" in login_signup.text
+
 def test_invalid_signup(selenium, test_server_url, test_user, test_password):
     selenium.get(test_server_url + "/signup")
 
@@ -83,3 +91,7 @@ def test_valid_signup(selenium, test_server_url):
     selenium.get(test_server_url + "/login")
     fill_out_login_form(selenium, username, password)
     assert "/email/verification-sent" in selenium.current_url
+
+def test_email_verification_invalid_token(selenium, test_server_url):
+    selenium.get(test_server_url + "/email/verify/notatoken")
+    assert "Invalid email token" in selenium.find_element(By.ID, "content").text
