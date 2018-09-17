@@ -84,7 +84,6 @@ def test_valid_signup(selenium, test_server_url):
     email = random_string(20) + "@" + random_string(5) + ".com"
     fill_out_signup_form(selenium, username=username, email=email, password=password, confirm=password)
     
-    import pdb; pdb.set_trace()
     assert "/email/verification-sent" in selenium.current_url
     assert email in selenium.find_element(By.ID, "content").text
 
