@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Account Settings</h3>
+<form id="change-email-form" method="post">
+    <p>Change Email</p>
+    {{ email_form.csrf_token }}
+    <p class="error">{{ email_err }}</p>
+    <div class="input-descriptors">
+        <p>Current password:</p>
+        <p>New email:</p>
+    </div>
+    <div class="inputs">
+        <input class="rounded-input vertical-spaced" name="current_password" type="password"><br />
+        {{ email_form.email(class_="rounded-input") }}<br />
+    </div><br />
+    {{ email_form.change_email }}
+</form>
+<form id="change-password-form" method="post">
+    <p>Change Password</p>
+    {{ password_form.csrf_token }}
+    <p class="error">{{ pass_err }}</p>
+    <div class="input-descriptors">
+        <p>Current password:</p>
+        <p>New password:</p>
+        <p>Confirm password:</p>
+    </div>
+    <div class="inputs">
+        <input class="rounded-input vertical-spaced" name="current_password" type="password"><br />
+        {{ password_form.password(class_="rounded-input") }}<br />
+        {{ password_form.confirm(class_="rounded-input vertical-spaced") }}
+    </div><br />
+    {{ password_form.change_password }}
+</form>
+{% endblock %}

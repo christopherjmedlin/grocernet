@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, session, current_app, url_for
-from .forms import PasswordResetForm, PasswordResetEmailForm, SignUpForm
+from .forms import PasswordResetForm, EmailForm, SignUpForm, AccountSettingsEmailForm, AccountSettingsPasswordForm
 from .models import User
 from veggienet.db import db, save_to_database
 from veggienet.util.authentication import authenticated_view, login
@@ -77,11 +77,39 @@ def verify_email(token):
         return render_template("verify-email.html", invalid_token=True)
 
     return render_template("verify-email.html", invalid_token=False)
-    
 
+@authenticated_view
+@users_views_bp.route('/settings', methods=["GET", "POST"])
+def user_settings():
+    email_form = AccountSettingsEmailForm()
+    password_form = AccountSettingsPasswordForm()
+    confirmation_email_sent = False
+    current_password_valid = False
+    email_err = ""
+    pass_err = ""
+    user = User.query.filter_by(username=session["user"]).first()
+
+    if request.method == "POST":
+        if email_form.change_email.data and email_form.validate_on_submit():
+            user.email = email_form.email.data
+            user.email_confirmed = False
+            send_activation_email(user, current_app.secret_key)
+            confirmation_email_sent = True
+        elif password_form.change_password.data and password_form.validate_on_submit():
+            user.set_password(password_form.password.data)
+        db.session.commit()
+        
+        if email_form.errors:
+            email_err = email_form.errors[next(iter(email_form.errors))][0]
+        if password_form.errors:
+            pass_err = password_form.errors[next(iter(password_form.errors))][0]
+
+    return render_template("user-settings.html", email_form=email_form, password_form=password_form, 
+                            confirmation_email_sent=confirmation_email_sent, email_err=email_err, pass_err=pass_err)
+    
 @users_views_bp.route('/password/reset', methods=["GET", "POST"])
 def password_reset():
-    form = PasswordResetEmailForm()
+    form = EmailForm()
 
     if form.validate_on_submit():
         # check if there is actually a user associated with this email

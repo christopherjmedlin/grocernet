@@ -1,6 +1,7 @@
 @import "components/topnav";
 @import "components/dropdown";
 @import "pages/passwordreset";
+@import "pages/usersettings";
 
 a {
     text-decoration: none;
@@ -47,6 +48,8 @@ ul {
 
 #content {
     text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .button-icon {
