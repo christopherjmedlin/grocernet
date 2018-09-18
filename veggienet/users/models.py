@@ -21,6 +21,12 @@ class User(db.Model):
 
     created_at = db.Column(db.DateTime(), server_default=db.func.now())
 
+    # profile stuff
+    first_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
+    gender = db.Column(db.String(1))
+    about_me = db.Column(db.String(300))
+
     def __repr__(self):
         return '<User %r' % self.username
 
