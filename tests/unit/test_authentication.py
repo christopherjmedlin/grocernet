@@ -1,5 +1,5 @@
 from veggienet import create_app
-from veggienet.authentication import authenticate, login
+from veggienet.util.authentication import authenticate, login
 from flask import g
 import jwt
 from werkzeug.security import generate_password_hash
@@ -14,7 +14,7 @@ def test_authenticate():
         with app.test_request_context():
             authenticate(token)
             assert g.get("authenticated", None) is True
-            assert g.get("user", None) is "user12345"
+            assert g.get("user", None) == "user12345"
 
 
 def test_invalid_authenticate():

@@ -4,7 +4,8 @@ import jwt
 import datetime
 
 from veggienet import create_app
-from veggienet import models
+from veggienet.users import models
+from veggienet.db import save_to_database
 
 app = create_app(testing=True)
 
@@ -42,14 +43,14 @@ def user():
     user = models.User("user234134", "!Lov3MyPiano",
                        "user234134@gmail.com", False)
     with app.app_context():
-        models.save_to_database(user)
+        save_to_database(user)
         # re-query user so it isn't expired and SQLAlchemy doesn't
         # attempt to refresh attributes
         return query_user(user.id)
 
 
 def test_user_retrieve(client, db, user):
-    response = client.get('/users/' + str(user.id))
+    response = client.get('/api/v1/users/' + str(user.id))
     data = response.data.decode('utf-8')
 
     assert user.username in data
@@ -58,14 +59,17 @@ def test_user_retrieve(client, db, user):
 
 
 def test_user_put(client, db, user):
+    response = client.put('/api/v1/users/' + str(user.id),
+                           data={"username": "user3413",
+                                 "email": "user234134@gmail.com"})
     user = query_user(user.id)
 
-    assert user.username == 'user23413'
+    assert user.username == 'user3413'
     assert user.email == 'user234134@gmail.com'
 
 
 def test_login(client, db, user):
-    response = client.post('/users/jwt/retrieve',
+    response = client.post('/api/v1/users/jwt/retrieve',
                            data={"username": user.username,
                                  "password": TEST_PASSWORD})
     token = json.loads(response.data.decode('utf-8'))["jwt"].encode('utf-8')
@@ -80,7 +84,7 @@ def test_jwt_refresh(client, db):
     token = jwt.encode({"user": "12345",
                         "exp": now},
                        app.secret_key).decode('utf-8')
-    response = client.get('/users/jwt/refresh',
+    response = client.get('/api/v1/users/jwt/refresh',
                           headers={'Authorization': 'Bearer ' + token})
 
     refreshed_token = json.loads(

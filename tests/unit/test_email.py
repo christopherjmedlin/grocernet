@@ -1,4 +1,5 @@
-from veggienet import email, create_app
+from veggienet import create_app
+from veggienet.util import email
 
 app = create_app(testing=True)
 
