@@ -1,17 +1,21 @@
-from .wsgi import app
 from getpass import getpass
 from veggienet.users.models import User
 from veggienet.db import db
+from flask import current_app
+from flask.cli import with_appcontext
+import click
 
 
-@app.cli.command('initdb')
+@click.command('initdb')
+@with_appcontext
 def initdb():
     """Initializes the database."""
     db.create_all()
     print('Initialized the database.')
 
 
-@app.cli.command('createuser')
+@click.command('createuser')
+@with_appcontext
 def createuser():
     username = input("Username: ")
     password = getpass("Password: ")
