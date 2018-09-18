@@ -30,6 +30,30 @@ def fill_out_login_form(selenium, username, password):
     selenium.find_element(By.XPATH, submit_xpath).click()
 
 
+def fill_out_user_settings_email_form(selenium, current_password,
+                                      email="newemail@gmail.com"):
+    """
+    Yeah you get the point...
+    """
+    current_pass_xpath = '//*[@id="change-email-form"]/div[2]/input[1]'
+    selenium.find_element(By.XPATH,
+                          current_pass_xpath).send_keys(current_password)
+    selenium.find_element(By.ID, "email").clear()
+    selenium.find_element(By.ID, "email").send_keys(email)
+    selenium.find_element(By.ID, "change_email").click()
+
+
+def fill_out_user_settings_password_form(selenium, current_password,
+                                         password="s3cur3p@$$",
+                                         confirm="s3cur3p@$$"):
+    current_pass_xpath = '//*[@id="change-password-form"]/div[2]/input[1]'
+    selenium.find_element(By.XPATH,
+                          current_pass_xpath).send_keys(current_password)
+    selenium.find_element(By.ID, "password").send_keys(password)
+    selenium.find_element(By.ID, "confirm").send_keys(confirm)
+    selenium.find_element(By.ID, "change_password").click()
+
+
 def random_string(length):
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(length))
@@ -54,6 +78,47 @@ def test_valid_login(selenium, test_server_url, test_user, test_password):
     account_dropdown_button = selenium.find_element(By.ID,
                                                     "account-dropdown-button")
     assert test_user in account_dropdown_button.text
+
+
+def test_user_settings_email(selenium, test_server_url, test_password):
+    selenium.get(test_server_url + "/settings")
+    fill_out_user_settings_email_form(selenium, "notthepassword")
+    error = selenium.find_element(By.CLASS_NAME, "error")
+    assert "Current password is invalid." in error.text
+
+    fill_out_user_settings_email_form(selenium, test_password)
+    success = selenium.find_element(By.CLASS_NAME, "success")
+    assert "Your email has been successfully changed." in success.text
+
+
+def test_user_settings_password(selenium, test_server_url, test_password,
+                                test_user):
+    fill_out_user_settings_password_form(selenium, "notthepassword")
+
+    error_xpath = '//*[@id="change-password-form"]/p[2]'
+    error = selenium.find_element(By.XPATH, error_xpath)
+    assert "Current password is invalid." in error.text
+
+    fill_out_user_settings_password_form(selenium, test_password)
+    success = selenium.find_element(By.CLASS_NAME, "success")
+    assert "Your password has been changed." in success.text
+
+    # now test logging in again with the new password
+    selenium.get(test_server_url + "/logout")
+    selenium.get(test_server_url + "/login")
+    fill_out_login_form(selenium, test_user, "s3cur3p@$$")
+
+    assert selenium.current_url == test_server_url + "/"
+    account_dropdown_button = selenium.find_element(By.ID,
+                                                    "account-dropdown-button")
+    assert test_user in account_dropdown_button.text
+
+    # now FINALLY change the password again so i don't have to change it back
+    # after every test
+    selenium.get(test_server_url + "/settings")
+    fill_out_user_settings_password_form(selenium, "s3cur3p@$$",
+                                         password=test_password,
+                                         confirm=test_password)
 
 
 def test_logout(selenium, test_server_url):
