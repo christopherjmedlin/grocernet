@@ -19,6 +19,8 @@ class User(db.Model):
     activated = db.Column(db.Boolean(), default=False, nullable=False)
     email_confirmed = db.Column(db.Boolean(), default=False, nullable=False)
 
+    created_at = db.Column(db.DateTime(), server_default=db.func.now())
+
     def __repr__(self):
         return '<User %r' % self.username
 
