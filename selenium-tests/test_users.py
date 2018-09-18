@@ -102,7 +102,7 @@ def test_valid_signup(selenium, test_server_url):
     fill_out_signup_form(selenium, username=username,
                          email=email, password=password,
                          confirm=password)
-    
+
     assert "/email/verification-sent" in selenium.current_url
     # split with @ symbol because of the email censoring
     assert email.split("@")[1] in selenium.find_element(By.ID, "content").text

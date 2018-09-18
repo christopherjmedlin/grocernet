@@ -32,6 +32,7 @@ def test_send_email():
                 assert outbox[0].subject == 'test'
                 assert outbox[0].sender == app.config['MAIL_DEFAULT_SENDER']
 
+
 def test_censor_out_email():
     addr = "testing123@gmail.com"
     assert email.censor_email(addr) == "t*********@gmail.com"

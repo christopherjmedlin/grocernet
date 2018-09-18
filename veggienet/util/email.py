@@ -47,6 +47,7 @@ def send_confirmation_email(user, secret_key):
         confirm_url=url)
     send_email("Confirm Your Veggienet Email", user.email, email_html)
 
+
 def censor_email(email):
     censored = ""
     for index, character in enumerate(email):
@@ -55,4 +56,3 @@ def censor_email(email):
         else:
             censored += character
     return censored
-            
