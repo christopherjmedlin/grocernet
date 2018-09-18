@@ -24,6 +24,8 @@ def createuser():
         admin = False
 
     user = User(username, password, email, admin)
+    user.activated = True
+    user.email_confirmed = True
 
     db.session.add(user)
     db.session.commit()
