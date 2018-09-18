@@ -2,7 +2,7 @@
 
 {% block content %}
 <h3>Account Settings</h3>
-<form id="change-email-form" method="post">
+<form class="user-settings-form" id="change-email-form" method="post">
     <p>Change Email</p>
     {{ email_form.csrf_token }}
     <p class="error">{{ email_err }}</p>
@@ -15,8 +15,8 @@
         {{ email_form.email(class_="rounded-input") }}<br />
     </div><br />
     {{ email_form.change_email }}
-</form>
-<form id="change-password-form" method="post">
+</form><br />
+<form class="user-settings-form" id="change-password-form" method="post">
     <p>Change Password</p>
     {{ password_form.csrf_token }}
     <p class="error">{{ pass_err }}</p>
