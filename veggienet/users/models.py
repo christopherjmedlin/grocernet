@@ -28,7 +28,7 @@ class User(db.Model):
     about_me = db.Column(db.String(300))
 
     def __repr__(self):
-        return '<User %r' % self.username
+        return '<User %r' % self.username + '>'
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
