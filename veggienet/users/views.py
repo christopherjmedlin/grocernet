@@ -17,7 +17,8 @@ from veggienet.util.email import (generate_email_confirmation_token,
                                   send_email,
                                   confirm_email_confirmation_token,
                                   send_activation_email,
-                                  send_confirmation_email)
+                                  send_confirmation_email,
+                                  censor_email)
 from werkzeug.security import check_password_hash
 
 users_views_bp = Blueprint('users_views', __name__)
@@ -70,7 +71,7 @@ def signup():
                         form.email.data, False)
             user.email_confirmed = False
             save_to_database(user)
-            session["verification_email"] = user.email
+            session["verification_email"] = censor_email(user.email)
 
             send_activation_email(user, current_app.secret_key)
             return redirect(url_for("users_views.verification_email_sent"))

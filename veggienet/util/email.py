@@ -46,3 +46,13 @@ def send_confirmation_email(user, secret_key):
         "email/confirmation-email.html",
         confirm_url=url)
     send_email("Confirm Your Veggienet Email", user.email, email_html)
+
+def censor_email(email):
+    censored = ""
+    for index, character in enumerate(email):
+        if index > 0 and index < email.rfind("@"):
+            censored += "*"
+        else:
+            censored += character
+    return censored
+            
