@@ -51,7 +51,9 @@ def login():
             return redirect(request.form.get('redirect'))
 
     redirect_url = request.args.get("redirect", "/")
-    return render_template('pages/users/login.html', redirect_url=redirect_url, error=err)
+    return render_template('pages/users/login.html',
+                           redirect_url=redirect_url,
+                           error=err)
 
 
 @users_views_bp.route('/logout')
@@ -91,7 +93,8 @@ def verify_email(token):
     try:
         email = confirm_email_confirmation_token(token, current_app.secret_key)
     except Exception:
-        return render_template("pages/users/verify-email.html", invalid_token=True)
+        return render_template("pages/users/verify-email.html",
+                               invalid_token=True)
 
     user = User.query.filter_by(email=email).first()
     if user:
@@ -99,9 +102,11 @@ def verify_email(token):
         user.activated = True
         db.session.commit()
     else:
-        return render_template("pages/users/verify-email.html", invalid_token=True)
+        return render_template("pages/users/verify-email.html",
+                               invalid_token=True)
 
-    return render_template("pages/users/verify-email.html", invalid_token=False)
+    return render_template("pages/users/verify-email.html",
+                           invalid_token=False)
 
 
 @users_views_bp.route('/settings', methods=["GET", "POST"])
