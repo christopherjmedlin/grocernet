@@ -59,9 +59,9 @@ def test_user_retrieve(client, db, user):
 
 
 def test_user_put(client, db, user):
-    response = client.put('/api/v1/users/' + str(user.id),
-                           data={"username": "user3413",
-                                 "email": "user234134@gmail.com"})
+    client.put('/api/v1/users/' + str(user.id),
+               data={"username": "user3413",
+                     "email": "user234134@gmail.com"})
     user = query_user(user.id)
 
     assert user.username == 'user3413'
