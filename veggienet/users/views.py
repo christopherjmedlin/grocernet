@@ -26,7 +26,7 @@ users_views_bp = Blueprint('users_views', __name__)
 
 @users_views_bp.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('pages/users/index.html')
 
 
 @users_views_bp.route('/login', methods=['GET', 'POST'])
@@ -40,6 +40,7 @@ def login():
             err = "Invalid username or password"
         else:
             if not user.activated:
+                session["verification_email"] = censor_email(user.email)
                 send_activation_email(user, current_app.secret_key)
                 return redirect(url_for("users_views.verification_email_sent"))
 
@@ -50,7 +51,7 @@ def login():
             return redirect(request.form.get('redirect'))
 
     redirect_url = request.args.get("redirect", "/")
-    return render_template('login.html', redirect_url=redirect_url, error=err)
+    return render_template('pages/users/login.html', redirect_url=redirect_url, error=err)
 
 
 @users_views_bp.route('/logout')
@@ -76,12 +77,12 @@ def signup():
             send_activation_email(user, current_app.secret_key)
             return redirect(url_for("users_views.verification_email_sent"))
 
-    return render_template("signup.html", form=form)
+    return render_template("pages/users/signup.html", form=form)
 
 
 @users_views_bp.route('/email/verification-sent')
 def verification_email_sent():
-    return render_template("verification-email-sent.html")
+    return render_template("pages/users/verification-email-sent.html")
 
 
 @users_views_bp.route('/email/verify/<token>')
@@ -90,7 +91,7 @@ def verify_email(token):
     try:
         email = confirm_email_confirmation_token(token, current_app.secret_key)
     except Exception:
-        return render_template("verify-email.html", invalid_token=True)
+        return render_template("pages/users/verify-email.html", invalid_token=True)
 
     user = User.query.filter_by(email=email).first()
     if user:
@@ -98,9 +99,9 @@ def verify_email(token):
         user.activated = True
         db.session.commit()
     else:
-        return render_template("verify-email.html", invalid_token=True)
+        return render_template("pages/users/verify-email.html", invalid_token=True)
 
-    return render_template("verify-email.html", invalid_token=False)
+    return render_template("pages/users/verify-email.html", invalid_token=False)
 
 
 @users_views_bp.route('/settings', methods=["GET", "POST"])
@@ -136,7 +137,7 @@ def user_settings():
                     next(iter(password_form.errors))
             ][0]
 
-    return render_template("user-settings.html",
+    return render_template("pages/users/user-settings.html",
                            email_form=email_form,
                            password_form=password_form,
                            confirmation_email_sent=confirmation_email_sent,
@@ -166,13 +167,13 @@ def password_reset():
             session["password_reset_email"] = censor_email(email)
         return redirect("/password/reset/email-sent")
 
-    return render_template('password-reset.html', form=form)
+    return render_template('pages/users/password-reset.html', form=form)
 
 
 @users_views_bp.route('/password/reset/email-sent')
 def password_reset_email_sent():
     if "password_reset_email" in session:
-        return render_template('password-reset-email-sent.html')
+        return render_template('pages/users/password-reset-email-sent.html')
     return redirect(url_for("users_views.password_reset"))
 
 
@@ -189,7 +190,7 @@ def password_reset_with_token(token):
         db.session.commit()
         return redirect(url_for("users_views.password_reset_success"))
 
-    return render_template('password-reset-token.html',
+    return render_template('pages/users/password-reset-token.html',
                            form=form,
                            token=token,
                            username=user.username)
@@ -197,4 +198,4 @@ def password_reset_with_token(token):
 
 @users_views_bp.route('/password/success')
 def password_reset_success():
-    return render_template("password-reset-success.html")
+    return render_template("pages/users/password-reset-success.html")
