@@ -157,7 +157,7 @@ def password_reset():
                        render_template('email/password-reset.html',
                                        reset_url=reset_url))
 
-            session["password_reset_email"] = email
+            session["password_reset_email"] = censor_email(email)
         return redirect("/password/reset/email-sent")
 
     return render_template('password-reset.html', form=form)
