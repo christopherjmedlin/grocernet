@@ -91,19 +91,45 @@ a:hover {
     .search-bar {
         display: none !important;
     }
+
+    #mobile-account-dropdown-button {
+        display: inline;
+    }
+
+    #account-dropdown-button {
+        display: none;
+    }
+
+    #login-signup {
+        display: none;
+    }
+
+    #account-dropdown {
+        right: 0px;
+    }
 }
 
 @media (min-width: 800px) {
     #search-dropdown-button {
         display: none;
     }
+    #account-dropdown-button {
+        display: inline;
+    }
+    #mobile-account-dropdown-button {
+        display: none;
+    }
+    #login-signup {
+        display: inline;
+    }
+
 }
 
 .form-box {
     margin-top: 100px;
     margin-bottom: 100px;
     max-width: 600px;
-    width: 50%;
+    width: 90%;
     display: inline-block;
     min-height: 300px;
     padding-top: 30px;

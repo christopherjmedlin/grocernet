@@ -1,6 +1,6 @@
 dropdownClickEvent = function(name) {
     $("#" + name + "-dropdown-button").click(function(event) {
-        var dropdown = $("#" + name + "-dropdown")
+        var dropdown = $("#account-dropdown")
         if (dropdown.css("display") == "block") {
             dropdown.css("display", "none")
         }
@@ -16,4 +16,5 @@ $('html').click(function() {
     $(".dropdown").css("display", "none");
 })
 
+dropdownClickEvent("mobile-account")
 dropdownClickEvent("account");

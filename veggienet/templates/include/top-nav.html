@@ -16,6 +16,7 @@
             <a id="search-dropdown-button"><i class="fas fa-search button-icon"></i></a>
             {% if session.authenticated %}
             <a id="account-dropdown-button">{{ session.user }}<i class="fas fa-caret-down"></i></a>
+            <a id="mobile-account-dropdown-button"><i class="fas fa-user"></i><i class="fas fa-caret-down"></i></a>
             <div class="dropdown" id="account-dropdown">
                 <a>My Profile</a>
                 <a href="{{ url_for('users_views.user_settings') }}">Account Settings</a>
@@ -26,6 +27,11 @@
                 <a href="{{ url_for('users_views.login') }}">Log In</a> or 
                 <a href="{{ url_for('users_views.signup') }}">Sign Up</a>
             </span>
+            <a id="mobile-account-dropdown-button"><i class="fas fa-user"></i><i class="fas fa-caret-down"></i></a>
+            <div class="dropdown" id="account-dropdown">
+                <a href="{{ url_for('users_views.login') }}">Log In</a>
+                <a href="{{ url_for('users_views.signup') }}">Sign Up</a>
+            </div>
             {% endif %}
         </div>
     </nav>
