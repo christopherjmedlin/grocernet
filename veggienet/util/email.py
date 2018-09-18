@@ -27,7 +27,13 @@ def send_email(subject, recipient, html):
 def send_activation_email(user, secret_key):
     token = generate_email_confirmation_token(user.email, secret_key)
     url = current_app.config["HOST"] + url_for("users_views.verify_email", token=token)
-    email_html = render_template("email/verification-email.html", confirm_url=url)
+    email_html = render_template("email/activation-email.html", confirm_url=url)
     send_email("Activate Your Veggienet Account", user.email, email_html)
+
+def send_confirmation_email(user, secret_key):
+    token = generate_email_confirmation_token(user.email, secret_key)
+    url = current_app.config["HOST"] + url_for("users_views.verify_email", token=token)
+    email_html = render_template("email/confirmation-email.html", confirm_url=url)
+    send_email("Confirm Your Veggienet Email", user.email, email_html)
 
 

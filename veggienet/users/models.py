@@ -15,6 +15,7 @@ class User(db.Model):
     password = db.Column(db.String(120), nullable=False)
     admin = db.Column(db.Boolean())
     
+    activated = db.Column(db.Boolean(), default=False, nullable=False)
     email_confirmed = db.Column(db.Boolean(), default=False, nullable=False)
     
     def __repr__(self):

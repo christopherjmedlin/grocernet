@@ -3,7 +3,8 @@ from .forms import PasswordResetForm, EmailForm, SignUpForm, AccountSettingsEmai
 from .models import User
 from veggienet.db import db, save_to_database
 from veggienet.util.authentication import authenticated_view, login
-from veggienet.util.email import generate_email_confirmation_token, send_email, confirm_email_confirmation_token, send_activation_email
+from veggienet.util.email import (generate_email_confirmation_token, send_email, 
+                                confirm_email_confirmation_token, send_activation_email, send_confirmation_email)
 from werkzeug.security import check_password_hash
 from functools import wraps
 
@@ -21,7 +22,7 @@ def login():
         if not user or not check_password_hash(user.password, request.form.get('password')):
             err = "Invalid username or password"
         else:
-            if not user.email_confirmed:
+            if not user.activated:
                 send_activation_email(user, current_app.secret_key)
                 return redirect(url_for("users_views.verification_email_sent"))
                 
@@ -72,6 +73,7 @@ def verify_email(token):
     user = User.query.filter_by(email=email).first()
     if user:
         user.email_confirmed = True
+        user.activated = True
         db.session.commit()
     else:
         return render_template("verify-email.html", invalid_token=True)
@@ -93,7 +95,7 @@ def user_settings():
         if email_form.change_email.data and email_form.validate_on_submit():
             user.email = email_form.email.data
             user.email_confirmed = False
-            send_activation_email(user, current_app.secret_key)
+            send_confirmation_email(user, current_app.secret_key)
             confirmation_email_sent = True
         elif password_form.change_password.data and password_form.validate_on_submit():
             user.set_password(password_form.password.data)

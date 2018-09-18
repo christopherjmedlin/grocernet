@@ -7,7 +7,7 @@ from flask import Blueprint
 @app.cli.command('initdb')
 def initdb():
     """Initializes the database."""
-    get_db().create_all()
+    db.create_all()
     print('Initialized the database.')
 
 @app.cli.command('createuser')
