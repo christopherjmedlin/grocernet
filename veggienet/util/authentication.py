@@ -2,9 +2,10 @@ import jwt
 import datetime
 from functools import wraps
 
-from flask import g, session, request, current_app
+from flask import g, session, request, current_app, redirect
 from werkzeug.security import check_password_hash
 from flask_restful import abort
+
 
 # decorator for authenticated endpoints
 def authentication_required(f):
@@ -17,9 +18,10 @@ def authentication_required(f):
         err_message = authenticate(g.get("auth_token", None))
         if err_message != '':
             abort(403, message=err_message)
-        
+
         return f(*args, **kwargs)
     return decorated_function
+
 
 def authenticated_view(f):
     @wraps(f)
@@ -27,11 +29,12 @@ def authenticated_view(f):
         try:
             if session["authenticated"]:
                 return f(*args, **kwargs)
-        except:
+        except KeyError:
             pass
         return redirect('/login?redirect=' + request.path)
 
     return decorated_function
+
 
 def authenticate(token):
     payload = None
@@ -47,16 +50,19 @@ def authenticate(token):
     g.authenticated = True
     return ''
 
+
 def create_jwt(username, secret_key):
     """
     Creates a new JSON Web Token with an expiration time of 24 hours
     """
-    token = jwt.encode({"user": username, 
-                        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=24),
-                        "iat": datetime.datetime.utcnow()}, 
-                        secret_key, algorithm="HS256")
+    expiration = datetime.datetime.utcnow() + datetime.timedelta(hours=24)
+    token = jwt.encode({"user": username,
+                        "exp": expiration,
+                        "iat": datetime.datetime.utcnow()},
+                       secret_key, algorithm="HS256")
     return token.decode('utf-8')
-    
+
+
 # should be used inside flask_restful routes
 def login(password_hash, password, username):
     if not check_password_hash(password_hash, password):

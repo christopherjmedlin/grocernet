@@ -5,6 +5,7 @@ from .db import db
 from .util.email import mail
 from flask_migrate import Migrate
 
+
 def create_app(config_path='../instance/config.py', testing=False):
     app = Flask(__name__, static_folder="static/dist")
     app.config.from_pyfile('../instance/config.py')
@@ -19,6 +20,6 @@ def create_app(config_path='../instance/config.py', testing=False):
 
     db.init_app(app)
     mail.init_app(app)
-    migrate = Migrate(app, db)
+    Migrate(app, db)
 
     return app

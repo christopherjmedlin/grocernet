@@ -2,6 +2,7 @@ import pytest
 
 from veggienet.validators import validate_password, validate_email
 
+
 @pytest.mark.parametrize("password", [
     ("!Lov3MyPiano"),
     ("SterlingGmail20.15"),
@@ -9,6 +10,7 @@ from veggienet.validators import validate_password, validate_email
 ])
 def test_validate_good_password(password):
     assert validate_password(password)
+
 
 @pytest.mark.parametrize("password", [
     ("1234343211234"),
@@ -20,7 +22,8 @@ def test_validate_bad_password(password):
         validate_password(password)
     except ValueError as e:
         err = e
-    assert err != None
+    assert err is not None
+
 
 @pytest.mark.parametrize("email", [
     ("johndoe@gmail.com"),
@@ -28,6 +31,7 @@ def test_validate_bad_password(password):
 ])
 def test_validate_good_email(email):
     assert validate_email(email)
+
 
 @pytest.mark.parametrize("email", [
     ("What's an email?"),
@@ -40,5 +44,4 @@ def test_validate_bad_email(email):
         validate_email(email)
     except ValueError as e:
         err = e
-    assert err != None
-
+    assert err is not None

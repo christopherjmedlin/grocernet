@@ -2,13 +2,14 @@ from .wsgi import app
 from getpass import getpass
 from veggienet.users.models import User
 from veggienet.db import db
-from flask import Blueprint
+
 
 @app.cli.command('initdb')
 def initdb():
     """Initializes the database."""
     db.create_all()
     print('Initialized the database.')
+
 
 @app.cli.command('createuser')
 def createuser():
