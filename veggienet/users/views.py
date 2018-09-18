@@ -45,6 +45,7 @@ def login():
             session["authenticated"] = True
             session["user"] = user.username
             session["email"] = user.email
+
             return redirect(request.form.get('redirect'))
 
     redirect_url = request.args.get("redirect", "/")
@@ -101,8 +102,8 @@ def verify_email(token):
     return render_template("verify-email.html", invalid_token=False)
 
 
-@authenticated_view
 @users_views_bp.route('/settings', methods=["GET", "POST"])
+@authenticated_view
 def user_settings():
     email_form = AccountSettingsEmailForm()
     password_form = AccountSettingsPasswordForm()
