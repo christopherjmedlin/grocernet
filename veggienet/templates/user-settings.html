@@ -7,21 +7,40 @@
 <form class="user-settings-form" id="change-email-form" method="post">
     <p>Change Email</p>
     {{ email_form.csrf_token }}
+    
+    {% if email_success %}
+    <p class="success" id="email-success">
+    Your email has been successfully changed. An email with instructions on how to reconfirm
+    your email address has been sent.
+    </p>
+    {% else %}
     <p class="error">{{ email_err }}</p>
+    {% endif %}
+
     <div class="input-descriptors">
         <p>Current password:</p>
         <p>New email:</p>
     </div>
+
     <div class="inputs">
         <input class="rounded-input vertical-spaced" name="current_password" type="password"><br />
         {{ email_form.email(class_="rounded-input") }}<br />
     </div><br />
+
     {{ email_form.change_email }}
 </form><br />
 <form class="user-settings-form" id="change-password-form" method="post">
     <p>Change Password</p>
     {{ password_form.csrf_token }}
+
+    {% if pass_success %}
+    <p class="success" id="pass_success">
+    Your password has been changed.
+    </p>
+    {% else %}
     <p class="error">{{ pass_err }}</p>
+    {% endif %}
+
     <div class="input-descriptors">
         <p>Current password:</p>
         <p>New password:</p>

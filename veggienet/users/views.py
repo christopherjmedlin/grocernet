@@ -111,6 +111,8 @@ def user_settings():
     confirmation_email_sent = False
     email_err = ""
     pass_err = ""
+    email_success = False
+    pass_success = False
     user = User.query.filter_by(username=session["user"]).first()
 
     if request.method == "POST":
@@ -120,9 +122,11 @@ def user_settings():
             user.email_confirmed = False
             send_confirmation_email(user, current_app.secret_key)
             confirmation_email_sent = True
+            email_success = True
         if password_form.change_password.data and \
            password_form.validate_on_submit():
             user.set_password(password_form.password.data)
+            pass_success = True
         db.session.commit()
 
         if email_form.errors:
@@ -137,7 +141,9 @@ def user_settings():
                            password_form=password_form,
                            confirmation_email_sent=confirmation_email_sent,
                            email_err=email_err,
-                           pass_err=pass_err)
+                           pass_err=pass_err,
+                           email_success=email_success,
+                           pass_success=pass_success)
 
 
 @users_views_bp.route('/password/reset', methods=["GET", "POST"])
