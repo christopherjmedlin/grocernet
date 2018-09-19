@@ -9,4 +9,6 @@ def geocode_address(address):
     else:
         geocoder = mapbox.Geocoder()
     geo_json = geocoder.forward(address).json()
-    return geo_json["features"][0]['geometry']['coordinates']
+    feature = geo_json["features"][0]
+
+    return (feature["place_name"], feature['geometry']['coordinates'])
