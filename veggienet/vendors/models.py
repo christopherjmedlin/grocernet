@@ -13,8 +13,9 @@ class Vendor(db.Model):
 
         data = geocode_address(address)
         self.address = data[0]
-        self.latitude_longitude = "POINT(" + str(data[1][0]) + " " + str(data[1][1]) + ")"
-    
+        self.latitude_longitude = "POINT(" + str(data[1][0]) + \
+                                  " " + str(data[1][1]) + ")"
+
     id = db.Column(db.Integer, primary_key=True)
 
     name = db.Column(db.String(100), nullable=False)
