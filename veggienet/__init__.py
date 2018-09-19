@@ -1,6 +1,7 @@
 from flask import Flask
 from .users.api import users_api_bp
 from .users.views import users_views_bp
+from .vendors.api import vendors_api_bp
 from .commands import initdb, createuser
 from .db import db
 from .util.email import mail
@@ -15,6 +16,8 @@ def create_app(config_path='../instance/config.py', testing=False):
 
     app.register_blueprint(users_api_bp)
     app.register_blueprint(users_views_bp)
+    app.register_blueprint(vendors_api_bp)
+
     app.cli.add_command(initdb)
     app.cli.add_command(createuser)
 
