@@ -12,7 +12,7 @@ def test_geocode_address():
 
     assert data[1][0] == -122.67928
     assert data[1][1] == 45.518886
-    assert data[0] == "701 Southwest 6th Avenue, Portland," \
+    assert data[0] == "701 Southwest 6th Avenue, Portland, " \
                       "Oregon 97204, United States"
 
 

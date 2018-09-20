@@ -24,11 +24,10 @@ def query_user_by_username(username):
 def user(app):
     user = models.User("user234134", "!Lov3MyPiano",
                        "user234134@gmail.com", False)
-    with app.app_context():
-        save_to_database(user)
-        # re-query user so it isn't expired and SQLAlchemy doesn't
-        # attempt to refresh attributes
-        return query_user(user.id)
+    save_to_database(user)
+    # re-query user so it isn't expired and SQLAlchemy doesn't
+    # attempt to refresh attributes
+    return query_user(user.id)
 
 
 def test_user_retrieve(client, db, user):

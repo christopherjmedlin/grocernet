@@ -1,6 +1,7 @@
 from veggienet.db import db
-from veggienet.util.geo import geocode_address
+from veggienet.util.geo import geocode_address, parse_postgis_point
 from geoalchemy2.types import Geography
+from geoalchemy2.shape import to_shape
 
 
 class Vendor(db.Model):
@@ -25,3 +26,13 @@ class Vendor(db.Model):
 
     def __repr__(self):
         return '<Vendor %r>' % self.name
+
+    def to_dict(self):
+        point = to_shape(self.latitude_longitude)
+        latlon = [point.x, point.y]
+        return {
+            'name': self.name,
+            'vendor_type': self.vendor_type,
+            'address': self.address,
+            'location': latlon
+        }
