@@ -15,3 +15,11 @@ def geocode_address(address):
     feature = geo_json["features"][0]
 
     return (feature["place_name"], feature['geometry']['coordinates'])
+
+
+def parse_postgis_point(point):
+    nums = point[6:-1].split()
+    try:
+        return [float(nums[0]), float(nums[1])]
+    except Exception:
+        raise ValueError("Invalid PostGIS point.")
