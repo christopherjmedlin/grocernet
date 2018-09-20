@@ -3,11 +3,8 @@ import json
 import jwt
 import datetime
 
-from veggienet import create_app
 from veggienet.users import models
 from veggienet.db import save_to_database
-
-app = create_app(testing=True)
 
 TEST_PASSWORD = "!Lov3MyPiano"
 
@@ -16,30 +13,15 @@ def query_user(user_id):
     """
     Helper for querying user from database with proper app context
     """
-    with app.app_context():
-        return models.User.query.filter_by(id=user_id).first()
+    return models.User.query.filter_by(id=user_id).first()
 
 
 def query_user_by_username(username):
-    with app.app_context():
-        return models.User.query.filter_by(username=username).first()
+    return models.User.query.filter_by(username=username).first()
 
 
 @pytest.fixture(scope="module")
-def client():
-    return app.test_client()
-
-
-@pytest.fixture(scope="function")
-def db():
-    with app.app_context():
-        models.db.drop_all()
-        models.db.create_all()
-        return models.db
-
-
-@pytest.fixture(scope="function")
-def user():
+def user(app):
     user = models.User("user234134", "!Lov3MyPiano",
                        "user234134@gmail.com", False)
     with app.app_context():
@@ -58,6 +40,17 @@ def test_user_retrieve(client, db, user):
     assert TEST_PASSWORD not in data
 
 
+def test_login(client, db, user, app):
+    response = client.post('/api/v1/users/jwt/retrieve',
+                           data={"username": user.username,
+                                 "password": TEST_PASSWORD})
+    token = json.loads(response.data.decode('utf-8'))["jwt"].encode('utf-8')
+
+    assert response.status_code == 202
+    assert jwt.decode(token, app.secret_key, algorithm='HS256')[
+        "user"] == user.username
+
+
 def test_user_put(client, db, user):
     client.put('/api/v1/users/' + str(user.id),
                data={"username": "user3413",
@@ -68,18 +61,7 @@ def test_user_put(client, db, user):
     assert user.email == 'user234134@gmail.com'
 
 
-def test_login(client, db, user):
-    response = client.post('/api/v1/users/jwt/retrieve',
-                           data={"username": user.username,
-                                 "password": TEST_PASSWORD})
-    token = json.loads(response.data.decode('utf-8'))["jwt"].encode('utf-8')
-
-    assert response.status_code == 202
-    assert jwt.decode(token, app.secret_key, algorithm='HS256')[
-        "user"] == "user234134"
-
-
-def test_jwt_refresh(client, db):
+def test_jwt_refresh(client, db, app):
     now = datetime.datetime.utcnow()
     token = jwt.encode({"user": "12345",
                         "exp": now},
