@@ -29,6 +29,12 @@ footer {
     border-top: 1px solid lightgrey;
     text-align: center;
     font-size: 13px;
+    
+    li {
+        margin-left: 9px;
+        margin-right: 9px;
+        display: inline;
+    }
 }
 
 .error {

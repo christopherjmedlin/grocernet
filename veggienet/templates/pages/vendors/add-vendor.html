@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Vendor{% endblock %}
+
+{% block content %}
+<form id="add-vendor-form" method="post">
+    <h4>Add a New Vendor</h4>
+    {{ form.csrf_token }}
+    <p>Name of vendor:</p>
+    {{ form.name(class_="rounded-input") }}
+    <p>Address of vendor:</p>
+    {{ form.address(class_="rounded-input") }}
+    <p>Vendor type:</p>
+    {{ form.vendor_type(class_="rounded-input") }}<br />
+    <input class="vertical-spaced" type="submit">
+</form>
+{% endblock %}
