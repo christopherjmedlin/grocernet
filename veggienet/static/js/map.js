@@ -14,25 +14,30 @@ initMap = function() {
         vendors = JSON.parse(this.responseText)["vendors"];
 
         for (var vendor in vendors) {
-            vendor = vendors[vendor]
-            markerIcon = document.createElement('i');
-            markerIcon.className = "marker-icon"
-            /*
+            vendor = vendors[vendor];
+            icon = null;
+            
             switch (vendor["vendor_type"]) {
                 case "store":
-                    markerIcon.className += " fas fa-shopping-cart";
+                    icon = "shopping-cart";
                     break;
                 case "market":
-                    markerIcon.className += " fas fa-store";
+                    icon = "store";
                     break;
                 case "farm":
-                    markerIcon.className += " fas fa-leaf";
+                    icon = "leaf";
                     break;
                 default:
-                    markerIcon.className += " fas fa-map-marker";
+                    icon = "map-marker";
             }
-            */
-            new L.marker([vendor["location"][1], vendor["location"][0]]).addTo(map)
+            
+            markerIcon = L.AwesomeMarkers.icon({
+                icon: icon,
+                markerColor: "green",
+                prefix: "fa"
+            });
+            new L.marker([vendor["location"][1], vendor["location"][0]],
+                         {icon: markerIcon}).addTo(map)
         }
     });
 
