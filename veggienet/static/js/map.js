@@ -30,7 +30,7 @@ initMap = function() {
                     icon = "leaf";
                     break;
                 default:
-                    icon = "map-marker";
+                    icon = null;
             }
             
             markerIcon = L.AwesomeMarkers.icon({
