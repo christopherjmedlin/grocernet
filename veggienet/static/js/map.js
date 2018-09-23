@@ -10,7 +10,9 @@ initMap = function() {
     }).addTo(map);
 
     var markerReq = new XMLHttpRequest();
+
     markerReq.addEventListener("load", function() {
+        markers = L.markerClusterGroup()
         vendors = JSON.parse(this.responseText)["vendors"];
 
         for (var vendor in vendors) {
@@ -37,8 +39,10 @@ initMap = function() {
                 prefix: "fa"
             });
             new L.marker([vendor["location"][1], vendor["location"][0]],
-                         {icon: markerIcon}).addTo(map)
+                         {icon: markerIcon}).addTo(markers);
         }
+
+        map.addLayer(markers);
     });
 
     markerReq.open("GET", "/api/v1/vendors/");
