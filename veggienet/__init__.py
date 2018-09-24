@@ -7,6 +7,7 @@ from .commands import initdb, createuser
 from .db import db
 from .util.email import mail
 from flask_migrate import Migrate
+import os
 
 
 def create_app(config_path='../instance/config.py', testing=False):
@@ -25,6 +26,9 @@ def create_app(config_path='../instance/config.py', testing=False):
 
     if testing:
         app.config['SQLALCHEMY_DATABASE_URI'] = app.config['TEST_DATABASE_URI']
+
+    if app.config["MAPBOX_ACCESS_TOKEN"]:
+        os.environ["MAPBOX_ACCESS_TOKEN"] = app.config["MAPBOX_ACCESS_TOKEN"]
 
     db.init_app(app)
     mail.init_app(app)
