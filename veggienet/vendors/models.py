@@ -8,14 +8,11 @@ class Vendor(db.Model):
     """
     Represents a business that sells produce.
     """
-
-    def __init__(self, name, address):
+    def __init__(self, name, address, vendor_type, latitude_longitude):
         self.name = name
-
-        data = geocode_address(address)
-        self.address = data[0]
-        self.latitude_longitude = "POINT(" + str(data[1][0]) + \
-                                  " " + str(data[1][1]) + ")"
+        self.address = address
+        self.vendor_type = vendor_type
+        self.latitude_longitude = latitude_longitude
 
     id = db.Column(db.Integer, primary_key=True)
 

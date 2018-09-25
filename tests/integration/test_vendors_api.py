@@ -12,21 +12,25 @@ def query_vendor(vendor_id):
 
 def populate_database():
     db.session.add(
-        Vendor("Albertson's", "5415 sw beaverton ave, portland")
+        Vendor("Albertson's", "5415 sw beaverton ave, portland",
+               "store", "POINT(-122.732444 45.487854)")
     )
     db.session.add(
-        Vendor("Portland Farmer's Market", "1799 sw park ave, portland")
+        Vendor("Portland Farmer's Market", "1799 sw park ave, portland",
+               "market", "POINT(-122.732251 45.487822)")
     )
     # outside of portland
     db.session.add(
-        Vendor("Safeway", "2201 E Madison St, Seattle, WA 98112")
+        Vendor("Safeway", "2201 E Madison St, Seattle, WA 98112",
+               "store", "POINT(-122.313122 47.620334)")
     )
     db.session.commit()
 
 
 @pytest.fixture(scope="module")
 def vendor(app):
-    vendor = Vendor("Safeway", "1010 sw jefferson street portland")
+    vendor = Vendor("Safeway", "1010 sw jefferson street portland",
+                    "store", "POINT(-122.684726 45.515668)")
     save_to_database(vendor)
     return query_vendor(vendor.id) 
 
@@ -77,7 +81,7 @@ def test_vendor_list_start_end(vendor, client,
 
 @pytest.mark.parametrize("point,expected_first", [
     ([47.2407301, -122.4403617], "Safeway"),
-    ([-45.4884216, -122.7314334], "Albertson's")
+    ([-45.4884216, -122.7314334], "Portland Farmer's Market")
 ])
 def test_vendor_list_distance_sort(vendor, client,
                                    point, expected_first):
@@ -85,5 +89,6 @@ def test_vendor_list_distance_sort(vendor, client,
     response = client.get("/api/v1/vendors/", query_string=query)
     data = json.loads(response.data.decode('utf-8'))
     
+    import pdb; pdb.set_trace()
     assert len(data["vendors"]) is 4
     assert data["vendors"][0]["name"] == expected_first

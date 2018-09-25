@@ -30,12 +30,10 @@ def test_user():
 @pytest.mark.skipif("MAPBOX_ACCESS_TOKEN" not in os.environ,
                     reason="No mapbox token found.")
 def test_vendor():
-    vendor = Vendor("Safeway", "1010 sw jefferson street portland")
+    vendor = Vendor("Safeway", "1010 sw jefferson street portland",
+                    "store", "POINT(10, 10)")
 
-    expected_address = "1010 Southwest Jefferson Street, " \
-                       "Portland, Oregon 97201, United States"
     assert vendor.name == "Safeway"
-    assert vendor.address == expected_address
-    assert vendor.latitude_longitude == "POINT(-122.68496 45.515816)"
+    assert vendor.address == "1010 sw jefferson street portland"
 
     assert str(vendor) == "<Vendor 'Safeway'>"
