@@ -38,8 +38,15 @@ initMap = function() {
                 markerColor: "green",
                 prefix: "fa"
             });
-            new L.marker([vendor["location"][1], vendor["location"][0]],
-                         {icon: markerIcon}).addTo(markers);
+
+            marker = new L.marker([vendor["location"][1], vendor["location"][0]],
+                {icon: markerIcon})
+
+            vendor_page = "/vendor/" + vendor["id"]
+            popup_html = '<a href="' + vendor_page + '">' + vendor["name"] + '</a>'
+            marker.bindPopup(popup_html)
+
+            marker.addTo(markers);
         }
 
         map.addLayer(markers);
