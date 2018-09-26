@@ -30,8 +30,12 @@ def create_app(config_path='../instance/config.py', testing=False):
     if app.config["MAPBOX_ACCESS_TOKEN"]:
         os.environ["MAPBOX_ACCESS_TOKEN"] = app.config["MAPBOX_ACCESS_TOKEN"]
 
+        @app.context_processor
+        def inject_mapbox_token():
+            return dict(mapbox_public_token=app.config["MAPBOX_ACCESS_TOKEN"])
+
     db.init_app(app)
     mail.init_app(app)
     Migrate(app, db)
-
+    
     return app

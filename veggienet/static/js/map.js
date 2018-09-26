@@ -1,4 +1,4 @@
-initMap = function() {
+initMap = function(mapboxToken) {
     var map = L.map('map-container')
     map.setView([0, 0])
     map.setZoom(0)
@@ -6,7 +6,7 @@ initMap = function() {
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         id: "mapbox.streets",
-        accessToken: "pk.eyJ1IjoiY2hyaXN0b3BoZXJqbWVkbGluIiwiYSI6ImNqbTg2ajdmaTAxanAzcW1oeW1zNng0c2cifQ.Zki78qEgErytwYY4-TM1tQ"
+        accessToken: mapboxToken
     }).addTo(map);
 
     var markerReq = new XMLHttpRequest();
@@ -56,4 +56,6 @@ initMap = function() {
     markerReq.send();
 }
 
-initMap();
+if (MAPBOX_ACCESS_TOKEN != "") {
+    initMap(MAPBOX_ACCESS_TOKEN);
+}
