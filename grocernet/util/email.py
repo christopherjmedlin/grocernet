@@ -35,7 +35,7 @@ def send_activation_email(user, secret_key):
     email_html = render_template(
         "email/activation-email.html",
         confirm_url=url)
-    send_email("Activate Your Veggienet Account", user.email, email_html)
+    send_email("Activate Your Grocernet Account", user.email, email_html)
 
 
 def send_confirmation_email(user, secret_key):
@@ -45,7 +45,7 @@ def send_confirmation_email(user, secret_key):
     email_html = render_template(
         "email/confirmation-email.html",
         confirm_url=url)
-    send_email("Confirm Your Veggienet Email", user.email, email_html)
+    send_email("Confirm Your Grocernet Email", user.email, email_html)
 
 
 def censor_email(email):
