@@ -1,5 +1,5 @@
 from .models import Vendor
-from flask_restful import Api, Resource, reqparse
+from flask_restful import Api, Resource, reqparse, abort
 from flask import Blueprint
 from geoalchemy2.shape import to_shape
 from geoalchemy2.functions import ST_Distance
@@ -17,7 +17,8 @@ def get_vendor_list_parser():
     parser.add_argument("start", type=int, location="args")
     parser.add_argument("end", type=int, location="args")
     return parser
-    
+
+
 @api.resource('/<int:model_id>')
 class VendorRetrieveResource(Resource):
     def query_vendor(self, model_id):
@@ -25,9 +26,9 @@ class VendorRetrieveResource(Resource):
         if vendor is not None:
             return vendor
         abort(404,
-              message="Could not find vendor object with id: " \
+              message="Could not find vendor object with id: "
                       + str(model_id))
-        
+
     def get(self, model_id):
         return self.query_vendor(model_id).to_dict()
 
@@ -37,13 +38,14 @@ class VendorListResource(Resource):
     def get(self):
         args = get_vendor_list_parser().parse_args()
         query = Vendor.query
-        
+
         if args["near_x"] and args["near_y"]:
-            wkt_point = "SRID=4326;POINT(" + str(args["near_y"]) + " " + str(args["near_x"]) + ")"
+            wkt_point = "SRID=4326;POINT(" + str(args["near_y"]) + \
+                        " " + str(args["near_x"]) + ")"
             query = query.order_by(
                 ST_Distance(Vendor.latitude_longitude, wkt_point)
             )
-        
+
         vendors = query.all()
         vendor_list = []
 
@@ -54,10 +56,10 @@ class VendorListResource(Resource):
         else:
             for vendor in vendors:
                 vendor_list.append(vendor.to_dict())
-        
+
         if args["start"] is None:
             args["start"] = 0
         if args["end"] is None:
             args["end"] = len(vendor_list)
-        
+
         return {"vendors": vendor_list[args["start"]:args["end"]]}

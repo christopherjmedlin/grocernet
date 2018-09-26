@@ -1,5 +1,4 @@
 from veggienet.db import db
-from veggienet.util.geo import geocode_address, parse_postgis_point
 from geoalchemy2.types import Geography
 from geoalchemy2.shape import to_shape
 
@@ -38,14 +37,13 @@ class Vendor(db.Model):
             'location': latlon
         }
 
+
 class Rating(db.Model):
     def __init__(self, rating, vendor_id, user_id):
         if self.rating <= 5 and self.rating >= 1:
             self.rating = rating
         else:
             raise ValueError("Rating must be between 1 and 5")
-        self.review = review
-        self.purchase_list = purchase_list
 
     id = db.Column(db.Integer, primary_key=True)
 

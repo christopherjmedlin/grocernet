@@ -2,7 +2,6 @@ import pytest
 import json
 from veggienet.vendors.models import Vendor
 from veggienet.db import save_to_database, db
-from veggienet.util.geo import parse_postgis_point
 from geoalchemy2.shape import to_shape
 
 
@@ -32,13 +31,13 @@ def vendor(app):
     vendor = Vendor("Safeway", "1010 sw jefferson street portland",
                     "store", "POINT(-122.684726 45.515668)")
     save_to_database(vendor)
-    return query_vendor(vendor.id) 
+    return query_vendor(vendor.id)
 
 
 def test_vendor_retrieve(vendor, client):
     response = client.get('/api/v1/vendors/' + str(vendor.id))
     data = response.data.decode('utf-8')
-    
+
     assert str(vendor.id) in data
     assert vendor.name in data
     assert vendor.address in data
@@ -76,7 +75,7 @@ def test_vendor_list_start_end(vendor, client,
              "end": end}
     response = client.get("/api/v1/vendors/", query_string=query)
     data = json.loads(response.data.decode('utf-8'))
-    
+
     assert len(data["vendors"]) is expected_length
 
 
@@ -89,6 +88,6 @@ def test_vendor_list_distance_sort(vendor, client,
     query = {"near_x": point[0], "near_y": point[1]}
     response = client.get("/api/v1/vendors/", query_string=query)
     data = json.loads(response.data.decode('utf-8'))
-    
+
     assert len(data["vendors"]) is 4
     assert data["vendors"][0]["name"] == expected_first

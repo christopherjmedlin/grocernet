@@ -6,6 +6,7 @@ from flask import Blueprint, render_template, url_for, redirect
 
 vendors_views_bp = Blueprint("vendors_views", __name__)
 
+
 @vendors_views_bp.route("/add-vendor", methods=["GET", "POST"])
 def add_vendor():
     form = AddVendorForm()
@@ -22,6 +23,7 @@ def add_vendor():
         save_to_database(vendor)
         return redirect(url_for("vendors_views.add_vendor_success"))
     return render_template("pages/vendors/add-vendor.html", form=form)
+
 
 @vendors_views_bp.route("/add-vendor/success")
 def add_vendor_success():

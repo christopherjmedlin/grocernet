@@ -1,6 +1,4 @@
 import mapbox
-from flask import current_app
-import os
 
 
 def geocode_address(address):
