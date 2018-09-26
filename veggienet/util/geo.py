@@ -4,9 +4,18 @@ import os
 
 
 def geocode_address(address):
+    """
+    Geocodes address with Mapbox Geocoding API, then returns data in a
+    a tuple of the format ('place name', [x, y])
+
+    Returns None if Mapbox Geocoding API returns nothing of value.
+    """
     geocoder = None
     geocoder = mapbox.Geocoder()
     geo_json = geocoder.forward(address).json()
+
+    if "features" not in geo_json or len(geo_json["features"]) == 0:
+        return None
     feature = geo_json["features"][0]
 
     return (feature["place_name"], feature['geometry']['coordinates'])

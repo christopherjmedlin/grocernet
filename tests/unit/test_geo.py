@@ -16,6 +16,11 @@ def test_geocode_address():
                       "Oregon 97204, United States"
 
 
+def test_geocode_invalid_address():
+    data = geo.geocode_address("fsadjkl;asdfkl;jadsf")
+    assert data is None
+
+
 def test_parse_postgis_point():
     point_string = "POINT(2.31324 5.3432)"
     assert geo.parse_postgis_point(point_string) == [2.31324, 5.3432]
