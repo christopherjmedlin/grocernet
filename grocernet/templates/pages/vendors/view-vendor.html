@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}{{ vendor.name }}{% endblock %}
+
+{% block content %}
+<div id="vendor-header">
+    <h1>{{ vendor.name }}</h1>
+    <div id="average-rating">
+        <b>3.56/5</b> <i>from 9 ratings</i>
+    </div>
+</div>
+{% endblock %}

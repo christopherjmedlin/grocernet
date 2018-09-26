@@ -27,3 +27,9 @@ def add_vendor():
 @vendors_views_bp.route("/add-vendor/success")
 def add_vendor_success():
     return render_template("pages/vendors/add-vendor-success.html")
+
+
+@vendors_views_bp.route("/vendor/<vendor_id>")
+def view_vendor(vendor_id):
+    vendor = Vendor.query.filter_by(id=vendor_id).first()
+    return render_template("pages/vendors/view-vendor.html", vendor=vendor)
