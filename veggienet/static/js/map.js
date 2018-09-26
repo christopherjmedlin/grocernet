@@ -1,7 +1,7 @@
 initMap = function() {
     var map = L.map('map-container')
-    map.setView([51, -0.09])
-    map.setZoom(10)
+    map.setView([0, 0])
+    map.setZoom(0)
     map.setMaxBounds(L.bounds(50, 100));
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
