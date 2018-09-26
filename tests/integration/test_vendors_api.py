@@ -34,6 +34,7 @@ def vendor(app):
     return query_vendor(vendor.id)
 
 
+@pytest.mark.mapbox_required
 def test_vendor_retrieve(vendor, client):
     response = client.get('/api/v1/vendors/' + str(vendor.id))
     data = response.data.decode('utf-8')
@@ -46,6 +47,7 @@ def test_vendor_retrieve(vendor, client):
     assert str(latlon.y) in data
 
 
+@pytest.mark.mapbox_required
 def test_vendor_list(vendor, client):
     populate_database()
     response = client.get('/api/v1/vendors/')
@@ -55,6 +57,7 @@ def test_vendor_list(vendor, client):
     assert vendor.to_dict() in data["vendors"]
 
 
+@pytest.mark.mapbox_required
 def test_vendor_list_points_only(vendor, client):
     query = {"points_only": True}
     response = client.get('/api/v1/vendors/', query_string=query)
@@ -66,6 +69,7 @@ def test_vendor_list_points_only(vendor, client):
     assert len(data["vendors"]) is 4
 
 
+@pytest.mark.mapbox_required
 @pytest.mark.parametrize("start,end,expected_length", [
     (1, 2, 1), (1, 5, 3), (105, 200, 0)
 ])
@@ -79,6 +83,7 @@ def test_vendor_list_start_end(vendor, client,
     assert len(data["vendors"]) is expected_length
 
 
+@pytest.mark.mapbox_required
 @pytest.mark.parametrize("point,expected_first", [
     ([47.2407301, -122.4403617], "Safeway"),
     ([-45.4884216, -122.7314334], "Portland Farmer's Market")

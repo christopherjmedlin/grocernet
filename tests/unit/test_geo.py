@@ -4,8 +4,7 @@ from veggienet.util import geo
 import os
 
 
-@pytest.mark.skipif("MAPBOX_ACCESS_TOKEN" not in os.environ,
-                    reason="No mapbox token found.")
+@pytest.mark.mapbox_required
 def test_geocode_address():
     test_address = "701 sw 6th ave portland"
     data = geo.geocode_address(test_address)
@@ -16,6 +15,7 @@ def test_geocode_address():
                       "Oregon 97204, United States"
 
 
+@pytest.mark.mapbox_required
 def test_geocode_invalid_address():
     data = geo.geocode_address("fsadjkl;asdfkl;jadsf")
     assert data is None
