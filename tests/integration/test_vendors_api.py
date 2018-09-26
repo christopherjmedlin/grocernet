@@ -38,7 +38,8 @@ def vendor(app):
 def test_vendor_retrieve(vendor, client):
     response = client.get('/api/v1/vendors/' + str(vendor.id))
     data = response.data.decode('utf-8')
-
+    
+    assert str(vendor.id) in data
     assert vendor.name in data
     assert vendor.address in data
     latlon = to_shape(vendor.latitude_longitude)
@@ -89,6 +90,5 @@ def test_vendor_list_distance_sort(vendor, client,
     response = client.get("/api/v1/vendors/", query_string=query)
     data = json.loads(response.data.decode('utf-8'))
     
-    import pdb; pdb.set_trace()
     assert len(data["vendors"]) is 4
     assert data["vendors"][0]["name"] == expected_first

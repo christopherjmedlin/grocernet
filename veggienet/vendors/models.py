@@ -31,6 +31,7 @@ class Vendor(db.Model):
         point = to_shape(self.latitude_longitude)
         latlon = [point.x, point.y]
         return {
+            "id": self.id,
             'name': self.name,
             'vendor_type': self.vendor_type,
             'address': self.address,
