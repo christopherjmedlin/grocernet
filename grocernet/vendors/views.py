@@ -18,8 +18,7 @@ def add_vendor():
         latlon = "POINT(" + str(geocode_data[1][0]) + \
                  " " + str(geocode_data[1][1]) + ")"
 
-        vendor = Vendor(form.name.data, form.address.data,
-                        form.vendor_type.data, latlon)
+        vendor = Vendor(form.name.data, form.address.data, latlon)
         save_to_database(vendor)
         return redirect(url_for("vendors_views.add_vendor_success"))
     return render_template("pages/vendors/add-vendor.html", form=form)

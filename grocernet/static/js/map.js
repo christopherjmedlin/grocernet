@@ -17,24 +17,8 @@ initMap = function(mapboxToken) {
 
         for (var vendor in vendors) {
             vendor = vendors[vendor];
-            icon = null;
-            
-            switch (vendor["vendor_type"]) {
-                case "store":
-                    icon = "shopping-cart";
-                    break;
-                case "market":
-                    icon = "store";
-                    break;
-                case "farm":
-                    icon = "leaf";
-                    break;
-                default:
-                    icon = null;
-            }
-            
             markerIcon = L.AwesomeMarkers.icon({
-                icon: icon,
+                icon: "store",
                 markerColor: "green",
                 prefix: "fa"
             });
