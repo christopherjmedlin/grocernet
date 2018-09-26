@@ -1,7 +1,7 @@
 import pytest
 import os
-from veggienet.users.models import User
-from veggienet.vendors.models import Vendor
+from grocernet.users.models import User
+from grocernet.vendors.models import Vendor
 
 
 def test_user():

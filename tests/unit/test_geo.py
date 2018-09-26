@@ -1,6 +1,6 @@
 import pytest
 
-from veggienet.util import geo
+from grocernet.util import geo
 import os
 
 

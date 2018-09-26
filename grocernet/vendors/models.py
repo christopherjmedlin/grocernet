@@ -1,4 +1,4 @@
-from veggienet.db import db
+from grocernet.db import db
 from geoalchemy2.types import Geography
 from geoalchemy2.shape import to_shape
 

@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import PasswordField, StringField, SubmitField
 from wtforms.validators import EqualTo, InputRequired, Email, ValidationError
 from .models import User
-from veggienet.util.validators import validate_password, validate_username
+from grocernet.util.validators import validate_password, validate_username
 from werkzeug.security import check_password_hash
 
 

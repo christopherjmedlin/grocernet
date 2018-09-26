@@ -1,7 +1,7 @@
-from veggienet.util import validators
+from grocernet.util import validators
 from .models import User
-from veggienet.db import db
-from veggienet.util.authentication import (login,
+from grocernet.db import db
+from grocernet.util.authentication import (login,
                                            authentication_required, create_jwt)
 
 from flask import g, current_app, Blueprint

@@ -1,6 +1,6 @@
 import pytest
 
-from veggienet.util.validators import validate_password, validate_email
+from grocernet.util.validators import validate_password, validate_email
 
 
 @pytest.mark.parametrize("password", [

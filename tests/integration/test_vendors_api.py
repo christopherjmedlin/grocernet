@@ -1,7 +1,7 @@
 import pytest
 import json
-from veggienet.vendors.models import Vendor
-from veggienet.db import save_to_database, db
+from grocernet.vendors.models import Vendor
+from grocernet.db import save_to_database, db
 from geoalchemy2.shape import to_shape
 
 

@@ -1,4 +1,4 @@
-from veggienet import create_app
+from grocernet import create_app
 
 app = create_app()
 

@@ -1,5 +1,5 @@
 {
-  "name": "veggienet",
+  "name": "grocernet",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/christopherjmedlin/veggienet.git"
+    "url": "git+https://gitlab.com/christopherjmedlin/grocernet.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/christopherjmedlin/veggienet/issues"
+    "url": "https://gitlab.com/christopherjmedlin/grocernet/issues"
   },
-  "homepage": "https://gitlab.com/christopherjmedlin/veggienet#README",
+  "homepage": "https://gitlab.com/christopherjmedlin/grocernet#README",
   "dependencies": {
     "del": "^3.0.0",
     "gulp": "^3.9.1",

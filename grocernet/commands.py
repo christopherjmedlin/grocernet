@@ -1,6 +1,6 @@
 from getpass import getpass
-from veggienet.users.models import User
-from veggienet.db import db
+from grocernet.users.models import User
+from grocernet.db import db
 from flask.cli import with_appcontext
 import click
 

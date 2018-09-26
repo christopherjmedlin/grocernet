@@ -1,6 +1,6 @@
 import pytest
-from veggienet import create_app
-from veggienet.db import db as sql
+from grocernet import create_app
+from grocernet.db import db as sql
 
 
 @pytest.fixture(scope="module")

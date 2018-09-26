@@ -1,4 +1,4 @@
-from veggienet.db import db
+from grocernet.db import db
 from werkzeug.security import generate_password_hash
 
 

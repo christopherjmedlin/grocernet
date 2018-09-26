@@ -3,8 +3,8 @@ import json
 import jwt
 import datetime
 
-from veggienet.users import models
-from veggienet.db import save_to_database
+from grocernet.users import models
+from grocernet.db import save_to_database
 
 TEST_PASSWORD = "!Lov3MyPiano"
 

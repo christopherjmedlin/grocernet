@@ -1,5 +1,5 @@
-from veggienet import create_app
-from veggienet.util.authentication import authenticate, login
+from grocernet import create_app
+from grocernet.util.authentication import authenticate, login
 from flask import g
 import jwt
 from werkzeug.security import generate_password_hash

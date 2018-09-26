@@ -1,5 +1,5 @@
-from veggienet import create_app
-from veggienet.util import email
+from grocernet import create_app
+from grocernet.util import email
 
 app = create_app(testing=True)
 

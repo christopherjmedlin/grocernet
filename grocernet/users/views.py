@@ -11,9 +11,9 @@ from .forms import (PasswordResetForm,
                     AccountSettingsEmailForm,
                     AccountSettingsPasswordForm)
 from .models import User
-from veggienet.db import db, save_to_database
-from veggienet.util.authentication import authenticated_view
-from veggienet.util.email import (generate_email_confirmation_token,
+from grocernet.db import db, save_to_database
+from grocernet.util.authentication import authenticated_view
+from grocernet.util.email import (generate_email_confirmation_token,
                                   send_email,
                                   confirm_email_confirmation_token,
                                   send_activation_email,
