@@ -21,6 +21,9 @@ class Vendor(db.Model):
     address = db.Column(db.String(200), nullable=False)
     latitude_longitude = db.Column(Geography("POINT"), nullable=False)
 
+    # relationship to rating
+    ratings = db.relationship('Rating', backref="vendor", lazy=True)
+
     def __repr__(self):
         return '<Vendor %r>' % self.name
 
@@ -33,3 +36,23 @@ class Vendor(db.Model):
             'address': self.address,
             'location': latlon
         }
+
+class Rating(db.Model):
+    def __init__(self, rating, vendor_id, user_id):
+        if self.rating <= 5 and self.rating >= 1:
+            self.rating = rating
+        else:
+            raise ValueError("Rating must be between 1 and 5")
+        self.review = review
+        self.purchase_list = purchase_list
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    rating = db.Column(db.Integer, nullable=False)
+    review = db.Column(db.String(2000))
+    purchase_list = db.Column(db.String(500))
+
+    vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'),
+                          nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'),
+                        nullable=False)

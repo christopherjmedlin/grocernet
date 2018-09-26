@@ -27,6 +27,9 @@ class User(db.Model):
     gender = db.Column(db.String(1))
     about_me = db.Column(db.String(300))
 
+    # relationship to rating
+    ratings = db.relationship('Rating', backref='user', lazy=True)
+
     def __repr__(self):
         return '<User %r' % self.username + '>'
 
