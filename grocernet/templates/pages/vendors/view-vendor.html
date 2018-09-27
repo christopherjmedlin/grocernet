@@ -6,7 +6,10 @@
 <div id="vendor-header">
     <h1>{{ vendor.name }}</h1>
     <div id="average-rating">
-        <b>3.56/5</b> <i>from 9 ratings</i>
+        <b>0/5</b> <i>from {{ vendor.ratings|length }} ratings</i>
+    </div>
+    <div id="product-list">
+        <i>strawberries, strawberry</i>
     </div>
 </div>
 {% endblock %}

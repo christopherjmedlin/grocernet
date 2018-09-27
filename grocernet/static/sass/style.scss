@@ -3,6 +3,7 @@
 @import "components/map";
 @import "pages/passwordreset";
 @import "pages/usersettings";
+@import "pages/vendorview";
 
 @import "leaflet.awesome-markers";
 @import "MarkerCluster.Default";
@@ -63,8 +64,6 @@ ul {
 
 #content {
     text-align: center;
-    padding-top: 20px;
-    padding-bottom: 20px;
 }
 
 .button-icon {
