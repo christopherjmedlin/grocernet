@@ -37,10 +37,9 @@ class Vendor(db.Model):
 
 class Rating(db.Model):
     def __init__(self, rating, vendor_id, user_id):
-        if self.rating <= 5 and self.rating >= 1:
-            self.rating = rating
-        else:
-            raise ValueError("Rating must be between 1 and 5")
+        self.rating = rating
+        self.vendor_id = vendor_id
+        self.user_id = user_id
 
     id = db.Column(db.Integer, primary_key=True)
 

@@ -3,6 +3,8 @@
 {% block title %}{{ vendor.name }}{% endblock %}
 
 {% block content %}
+<!-- hidden input for inserting vendor id -->
+<input id="vendor-id" type="hidden" value="{{ vendor.id }}">
 <div id="vendor-header">
     <div id="vendor-header-left">
         <h1>{{ vendor.name }}</h1>

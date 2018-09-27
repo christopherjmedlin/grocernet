@@ -1,6 +1,7 @@
-from .models import Vendor
+from .models import Vendor, Rating
+from grocernet.db import save_to_database, db
 from flask_restful import Api, Resource, reqparse, abort
-from flask import Blueprint
+from flask import Blueprint, session
 from geoalchemy2.shape import to_shape
 from geoalchemy2.functions import ST_Distance
 
@@ -63,3 +64,35 @@ class VendorListResource(Resource):
             args["end"] = len(vendor_list)
 
         return {"vendors": vendor_list[args["start"]:args["end"]]}
+
+
+def rating(rating):
+    rating = int(rating)
+    if rating > 5 or rating < 1:
+        raise ValueError("Rating must be (inclusively) in between 1 and 5")
+    return rating
+
+
+def get_rate_parser():
+    parser = reqparse.RequestParser()
+    parser.add_argument("vendor_id", type=int, required=True)
+    parser.add_argument("rating", type=rating, required=True)
+    return parser
+
+
+@api.resource("/rate")
+class PostRatingResource(Resource):
+    def post(self):
+        args = get_rate_parser().parse_args()
+        if Vendor.query.filter_by(id=args["vendor_id"]).first():
+            rating = Rating.query.filter_by(vendor_id=args["vendor_id"],
+                                            user_id=session["user_id"]).first()
+            if rating:
+                rating.rating = args["rating"]
+                db.session.commit()
+            else:
+                rating = Rating(args["rating"], args["vendor_id"], session["user_id"])
+                save_to_database(rating)
+        else:
+            abort(404,
+                  message="Vendor does not exist")
