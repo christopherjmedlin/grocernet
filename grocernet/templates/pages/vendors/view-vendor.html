@@ -4,12 +4,39 @@
 
 {% block content %}
 <div id="vendor-header">
-    <h1>{{ vendor.name }}</h1>
-    <div id="average-rating">
-        <b>0/5</b> <i>from {{ vendor.ratings|length }} ratings</i>
+    <div id="vendor-header-left">
+        <h1>{{ vendor.name }}</h1>
+        <div id="average-rating">
+            <b>0/5</b> <i>from {{ vendor.ratings|length }} ratings</i>
+        </div>
+        <div id="product-list">
+            <i>strawberries, strawberry</i>
+        </div>
     </div>
-    <div id="product-list">
-        <i>strawberries, strawberry</i>
+    <div id="vendor-header-right">
+        <img src="{{ mapbox_static_url }}" />
     </div>
+</div>
+<div id="user-rating">
+    {% if authenticated %}
+    <h4>Your rating:</h4>
+    <i id="user-rating-one" class="rating-star unchecked fa fa-star"></i>
+    <i id="user-rating-two" class="rating-star unchecked fa fa-star"></i>
+    <i id="user-rating-three" class="rating-star unchecked fa fa-star"></i>
+    <i id="user-rating-four" class="rating-star unchecked fa fa-star"></i>
+    <i id="user-rating-five" class="rating-star unchecked fa fa-star"></i>
+    <br />
+    <br />
+    {% if not user_rating or not user_rating.review %}
+    <button><i class="fa fa-edit"></i> Add Review</button>
+    {% else %}
+    <button>Edit Review</button>
+    {% endif %}
+
+    {% else %}
+    <p>
+        <a class="blue-link" href="{{ url_for('users_views.login') }}">Log In</a> to rate this vendor.
+    </p>
+    {% endif %}  
 </div>
 {% endblock %}

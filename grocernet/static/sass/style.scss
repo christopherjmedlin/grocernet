@@ -14,7 +14,7 @@ a {
     color: black;
 }
 
-input[type=submit] {
+input[type=submit], button {
     border-radius: 4px;
     background-color: green;
     color: white;
@@ -69,6 +69,11 @@ ul {
 .button-icon {
     color: black;
     cursor: pointer;
+}
+
+.blue-link {
+    color: blue;
+    text-decoration: underline;
 }
 
 .rounded-box {
@@ -157,4 +162,16 @@ a:hover {
             color: lightgrey;
         }
     }
+}
+
+.rating-star {
+    cursor: pointer;
+}
+
+.rating-star.unchecked {
+     color: lightgrey;
+}
+
+.rating-star.checked, .rating-star.hovered {
+    color: green;
 }

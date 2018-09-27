@@ -40,6 +40,6 @@ initMap = function(mapboxToken) {
     markerReq.send();
 }
 
-if (MAPBOX_ACCESS_TOKEN != "") {
+if (MAPBOX_ACCESS_TOKEN != "" && $("#map-container").length) {
     initMap(MAPBOX_ACCESS_TOKEN);
 }

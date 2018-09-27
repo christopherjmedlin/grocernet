@@ -1,8 +1,10 @@
-from .models import Vendor
+from .models import Vendor, Rating
 from .forms import AddVendorForm
+from grocernet.users.models import User
 from grocernet.db import save_to_database
-from grocernet.util.geo import geocode_address
-from flask import Blueprint, render_template, url_for, redirect
+from grocernet.util.geo import geocode_address, get_mapbox_static_url
+from flask import Blueprint, render_template, url_for, redirect, session
+from geoalchemy2.shape import to_shape
 
 vendors_views_bp = Blueprint("vendors_views", __name__)
 
@@ -32,4 +34,18 @@ def add_vendor_success():
 @vendors_views_bp.route("/vendor/<vendor_id>")
 def view_vendor(vendor_id):
     vendor = Vendor.query.filter_by(id=vendor_id).first()
-    return render_template("pages/vendors/view-vendor.html", vendor=vendor)
+    point = to_shape(vendor.latitude_longitude)
+    mapbox_static_url = get_mapbox_static_url(point.x, point.y)
+    
+    user_rating = None
+    authenticated = False
+    if "user" in session:
+        authenticated = True
+        user = User.query.filter_by(username=session["user"]).first()
+        user_rating = Rating.query.filter_by(user_id=user.id,
+                                             vendor_id=vendor.id).first()
+    
+    return render_template("pages/vendors/view-vendor.html", vendor=vendor,
+                           mapbox_static_url=mapbox_static_url,
+                           authenticated=authenticated,
+                           user_rating=user_rating)
