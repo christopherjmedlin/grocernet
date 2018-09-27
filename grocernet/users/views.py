@@ -47,6 +47,7 @@ def login():
             session["authenticated"] = True
             session["user"] = user.username
             session["email"] = user.email
+            session["user_id"] = user.id
 
             return redirect(request.form.get('redirect'))
 
