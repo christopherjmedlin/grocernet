@@ -31,7 +31,7 @@ def test_user():
                     reason="No mapbox token found.")
 def test_vendor():
     vendor = Vendor("Safeway", "1010 sw jefferson street portland",
-                    "store", "POINT(10, 10)")
+                    "POINT(10, 10)")
 
     assert vendor.name == "Safeway"
     assert vendor.address == "1010 sw jefferson street portland"

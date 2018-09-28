@@ -12,16 +12,16 @@ def query_vendor(vendor_id):
 def populate_database():
     db.session.add(
         Vendor("Albertson's", "5415 sw beaverton ave, portland",
-               "store", "POINT(-122.732444 45.487854)")
+               "POINT(-122.732444 45.487854)")
     )
     db.session.add(
         Vendor("Portland Farmer's Market", "1799 sw park ave, portland",
-               "market", "POINT(-122.732251 45.487822)")
+               "POINT(-122.732251 45.487822)")
     )
     # outside of portland
     db.session.add(
         Vendor("Safeway", "2201 E Madison St, Seattle, WA 98112",
-               "store", "POINT(-122.313122 47.620334)")
+               "POINT(-122.313122 47.620334)")
     )
     db.session.commit()
 
@@ -29,7 +29,7 @@ def populate_database():
 @pytest.fixture(scope="module")
 def vendor(app):
     vendor = Vendor("Safeway", "1010 sw jefferson street portland",
-                    "store", "POINT(-122.684726 45.515668)")
+                    "POINT(-122.684726 45.515668)")
     save_to_database(vendor)
     return query_vendor(vendor.id)
 
