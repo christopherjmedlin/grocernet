@@ -1,4 +1,5 @@
 from grocernet.db import db
+from grocernet.util.ratings import get_rating_average
 from geoalchemy2.types import Geography
 from geoalchemy2.shape import to_shape
 
@@ -17,9 +18,13 @@ class Vendor(db.Model):
     name = db.Column(db.String(100), nullable=False)
     address = db.Column(db.String(200), nullable=False)
     latitude_longitude = db.Column(Geography("POINT"), nullable=False)
-
+    
+    avg_rating = db.Column(db.Float(), default=0.00)
     # relationship to rating
     ratings = db.relationship('Rating', backref="vendor", lazy=True)
+    
+    def update_average_rating(self):
+        avg_rating = get_rating_average(self.ratings)
 
     def __repr__(self):
         return '<Vendor %r>' % self.name

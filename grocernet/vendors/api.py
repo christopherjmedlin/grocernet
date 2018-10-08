@@ -1,7 +1,7 @@
 from .models import Vendor, Rating
 from grocernet.db import save_to_database, db
 from flask_restful import Api, Resource, reqparse, abort
-from flask import Blueprint, session
+from flask import Blueprint, session, current_app
 from geoalchemy2.shape import to_shape
 from geoalchemy2.functions import ST_Distance
 
@@ -84,7 +84,8 @@ def get_rate_parser():
 class PostRatingResource(Resource):
     def post(self):
         args = get_rate_parser().parse_args()
-        if Vendor.query.filter_by(id=args["vendor_id"]).first():
+        vendor = Vendor.query.filter_by(id=args["vendor_id"]).first()
+        if vendor:
             rating = Rating.query.filter_by(vendor_id=args["vendor_id"],
                                             user_id=session["user_id"]).first()
             if rating:
@@ -93,6 +94,17 @@ class PostRatingResource(Resource):
             else:
                 rating = Rating(args["rating"], args["vendor_id"], session["user_id"])
                 save_to_database(rating)
+            
+            vendor.update_average_rating()
+            db.session.commit()
         else:
             abort(404,
                   message="Vendor does not exist")
+
+
+@api.resource("/mapbox-token")
+class MapboxTokenResource(Resource):
+    def get(self):
+        return {
+            "mapbox_token": current_app.config["MAPBOX_PUBLIC_ACCESS_TOKEN"]
+        }

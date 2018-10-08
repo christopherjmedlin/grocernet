@@ -40,6 +40,12 @@ initMap = function(mapboxToken) {
     markerReq.send();
 }
 
-if (MAPBOX_ACCESS_TOKEN != "" && $("#map-container").length) {
-    initMap(MAPBOX_ACCESS_TOKEN);
-}
+// gotta get Mapbox token from backend application
+var tokenReq = new XMLHttpRequest();
+
+tokenReq.addEventListener("load", function() {
+    token = JSON.parse(this.responseText)["mapbox_token"];
+    initMap(token);
+});
+tokenReq.open("GET", "/api/v1/vendors/mapbox-token");
+tokenReq.send();
