@@ -36,10 +36,21 @@ class VendorRetrieveResource(Resource):
 
 @api.resource('/')
 class VendorListResource(Resource):
+    """
+    Endpoint for acquiring a list of vendors.
+
+    The near_x and near_y arguments allow for specifying a point to
+    sort by distance from. For instance, if I wanted to get vendors
+    close to New York City, I would include the longitude and latitude
+    of New York City in the form of near_x and near_y.
+
+    The points_only argument will make the endpoint return only the latitude
+    and longitude of the vendors.
+    """
     def get(self):
         args = get_vendor_list_parser().parse_args()
         query = Vendor.query
-
+        
         if args["near_x"] and args["near_y"]:
             wkt_point = "SRID=4326;POINT(" + str(args["near_y"]) + \
                         " " + str(args["near_x"]) + ")"
@@ -67,6 +78,11 @@ class VendorListResource(Resource):
 
 
 def rating(rating):
+    """
+    This verifies that the rating is in between 1 and 5, although now that
+    I think about it this is already verified in the database layer.
+    """
+
     rating = int(rating)
     if rating > 5 or rating < 1:
         raise ValueError("Rating must be (inclusively) in between 1 and 5")
@@ -82,6 +98,11 @@ def get_rate_parser():
 
 @api.resource("/rate")
 class PostRatingResource(Resource):
+    """
+    This endpoint is used for rating a vendor.
+
+    It is used when the user clicks on the rating stars on the vendor page.
+    """
     def post(self):
         args = get_rate_parser().parse_args()
         vendor = Vendor.query.filter_by(id=args["vendor_id"]).first()
@@ -104,6 +125,11 @@ class PostRatingResource(Resource):
 
 @api.resource("/mapbox-token")
 class MapboxTokenResource(Resource):
+    """
+    This endpoint returns the mapbox token defined in the configuration.
+
+    I created this so that I don't have to insert the mapbox token into the front-end code.
+    """
     def get(self):
         return {
             "mapbox_token": current_app.config["MAPBOX_PUBLIC_ACCESS_TOKEN"]
