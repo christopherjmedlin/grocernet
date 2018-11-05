@@ -38,6 +38,15 @@ MAIL_PORT = <port of mail server>
 MAPBOX_ACCESS_TOKEN = <mapbox token to be used in backend geocoding>
 MAPBOX_PUBLIC_ACCESS_TOKEN = <mapbox token to be used in frontend map>
 ```
+
+You also need to install the NPM packages and run gulp in order to run certain frontend related tasks 
+(compiling SCSS, minifying JS, etc...)
+
+```
+npm i
+node_modules/gulp/bin/gulp.js
+```
+
 To run the app:
 
 `PYTHONPATH=. FLASK_APP=grocernet.wsgi venv/bin/flask run`
